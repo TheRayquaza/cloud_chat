@@ -1,58 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="../bootstrap.css">
-      <title>Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/imports/bootstrap.css" />
+    <title>Login</title>
   </head>
-  <body>
-      <section class="h-100 gradient-form" style="background-color: #eee;">
-          <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-              <div class="col-xl-10">
-                <div class="card rounded-3 text-black">
-                  <div class="row g-0">
-                    <div class="col-lg-6">
-                      <div class="card-body p-md-5 mx-md-4">
-        
-                        <div class="text-center">
-                          <h4 class="mt-1 mb-5 pb-1">Cloud Chat - Assignment 1</h4>
-                        </div>
-        
-                        <form>
-                          <p>Login to your account</p>
-        
-                          <div class="form-outline mb-4">
-                            <input type="email" id="form2Example11" class="form-control" placeholder="Email" />
-                          </div>
-        
-                          <div class="form-outline mb-4">
-                            <input type="Password" placeholder="Password" id="form2Example22" class="form-control" />
-                          </div>
-        
-                          <div class="text-center pt-1 mb-5 pb-1">
-                              <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">
-                                  Login
-                              </button>
-                              <div class="container">
-                                  <a class="text-muted" href="../register/register.html">Forgot password?</a>
-                              </div>
-                          </div>
-        
-                          <div class="d-flex align-items-center justify-content-center pb-4">
-                            <p class="mb-0 me-2">Don't have an account?</p>
-                            <button type="button" class="btn btn-outline-primary">Create a new account</button>
-                          </div>
-                        </form>
 
-                      </div>
-                    </div>
-                  </div>
+  <body>
+    <header class="sticky-top" id="header"></header>
+
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card rounded-3 text-black">
+            <div class="card-body p-md-5 mx-md-4">
+              <form>
+                <h2 class="mb-4">Login to your account</h2>
+
+                <div class="form-outline mb-4">
+                  <input type="email" class="form-control" placeholder="Email" />
                 </div>
-              </div>
+
+                <div class="form-outline mb-4">
+                  <input type="password" class="form-control" placeholder="Password" />
+                </div>
+
+                <button type="button" class="btn btn-primary btn-block mb-4">
+                  Login
+                </button>
+
+                <div class="text-center pb-4">
+                  <p class="mb-0">
+                    <a href="/register/register.html">Forgot password?</a>
+                  </p>
+                  <p class="mb-0">Don't have an account?</p>
+                  <button type="button" class="btn btn-outline-primary">
+                    Create a new account
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="sticky-bottom"></footer>
+
+    <script src="/imports/jquery.js"></script>
+    <script src="/imports/poper.js"></script>
+    <script src="/imports/bootstrap.js"></script>
+    <script>
+      $(() => {
+        $("#header").load("/header.html");
+        $("#footer").load("/footer.html");
+      });
+    </script>
   </body>
 </html>
