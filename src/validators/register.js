@@ -1,14 +1,14 @@
-const validateUsername = username => {
+const validate_username = username => {
     return username.length >= 6;
 }
   
-const validatePassword = password => {
+const validate_password = password => {
     const uppercaseRegex = /[A-Z]/;
     const numberRegex = /\d/;
     return password.length >= 8 && uppercaseRegex.test(password) && numberRegex.test(password);
 }
 
 module.exports = {
-    validatePassword,
-    validateUsername
+    validate_password,
+    validate_username
 }
