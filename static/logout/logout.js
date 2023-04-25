@@ -1,15 +1,13 @@
 
 const logout = () =>
-  // Send a POST request to /logout endpoint
   fetch(document.location.origin + "/logout", {
     method: "POST",
     headers: { "Content-Type": "application/json"}
   })
 
-// Get the logout button element by ID
-const logout_btn = document.getElementById("logout-btn");
+const logout_btn = document.getElementById("logout-btn")
+logout_btn.innerHTML = "Logout from " + localStorage.getItem("username")
 
-// Add an event listener to the logout button
 logout_btn.addEventListener("click", () =>
     logout()
     .then(response => response.json())

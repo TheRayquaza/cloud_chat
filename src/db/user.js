@@ -1,40 +1,47 @@
 const path = require("path")
 const client = require(path.join(__dirname, "/client"))
 const table = require(path.join(__dirname, "../db/settings")).tables.users
+const { db_logger } = require(path.join(__dirname, "../logger"))
 
 const put_user = (username, hash_password, api_key, callback) => {
-    console.log("[db] put a new user")
+    db_logger.info("put a new user")
     client.query("INSERT INTO " + table + "(username, password_hash, api_key, permission) VALUES (?, ?, ?, ?)", [username, hash_password, api_key, 0])
     .then(res => callback(true))
     .catch(err => callback(false))
 }
 
 const get_user = (id, callback) => {
-    console.log("[db] get user " + id)
+    db_logger.info("get user " + id)
     client.query("SELECT * FROM " + table + " WHERE id = (?)", [id])
     .then(res => callback(res[0].length == 0 ? undefined : res[0][0]))
-    .catch(err => console.log(err))
+    .catch(err => db_logger.error(err))
 }
 
 const get_user_id = (username, callback) => {
-    console.log("[db] get user by its username " + username)
+    db_logger.info("get user by its username " + username)
     client.query("SELECT * FROM " + table + " WHERE username = (?)", [username])
     .then(res => callback(res[0].length == 0 ? undefined : res[0][0]))
-    .catch(err => console.log(err))
+    .catch(err => db_logger.error(err))
 }
 
 const delete_user = (id, callback) => {
-    console.log("[db] delete user")
+    db_logger.info("delete user with id " + id)
     client.query("DELETE FROM " + table + " WHERE id = (?)", [id])
     .then(res => callback(true))
-    .catch(err => callback(false))
+    .catch(err => {
+        db_logger.error(err)
+        callback(false)
+    })
 }
 
 const get_api_key_validity = (api_key, callback) => {
-    console.log("[db] verify the validity of the key")
+    db_logger.info("verify the validity of the key")
     client.query("SELECT * FROM " + table + " WHERE api_key = (?)", [api_key])
     .then(res => callback(res[0].length == 0))
-    .catch(err => callback(false))
+    .catch(err => {
+        db_logger.error(err)
+        callback(false)
+    })
 }
 
 

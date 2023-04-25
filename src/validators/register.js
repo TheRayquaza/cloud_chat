@@ -1,5 +1,5 @@
 const validate_username = username => {
-    return username.length >= 6;
+    return username.length >= 5;
 }
   
 const validate_password = password => {

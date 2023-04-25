@@ -9,6 +9,5 @@ router.use(middleware_permissions)
 
 router.get("/:id", controller.get_user)
 router.delete("/:id", controller.delete_user)
-//router.post("/", controller.post_user)
 
 module.exports = router

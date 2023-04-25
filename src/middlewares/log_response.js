@@ -1,21 +1,13 @@
+const path = require("path")
+const { middleware_logger } = require(path.join(__dirname, "../logger"))
 
 const log_response = (req, res, next) => {
-    if (!req.query.transport || req.query.transport !== "polling")
-    {
-        console.log("========= RESPONSE ==========");
-        if (Array.isArray(res.body))
-            res.body.forEach(elm => console.log("* " + JSON.stringify(elm)));
-        else 
-            Object.keys(res.body).forEach(key => console.log("* " + key + " : " + JSON.stringify(res.body[key])));
-
-        if (res.cookies)
-        {
-            console.log("Cookies :");
-            Object.keys(res.cookies).forEach(key => console.log("\t* " + key + " : " + JSON.stringify(res.cookies[key])));
-        }
-        console.log("=============================");
-    }
+    res.on('finish', () => {
+      const responseBody = res.body ? JSON.stringify(res.body) : '';
+      const message = `${req.method} ${req.originalUrl} ${res.statusCode} ${responseBody}`;
+      middleware_logger.info(message);
+    });
     next();
-}
+  }
 
 module.exports = log_response;

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/imports/bootstrap.css" />
+    <link rel="stylesheet" href="/imports/smackbar.css">
     <link rel="stylesheet" href="/imports/font-awesome.css"/>
     <script src="/imports/font-awesome.js"></script>
     <title>Register</title>
@@ -47,7 +48,8 @@
                 <div class="mt-4 pt-2">
                   <input
                     class="btn btn-primary btn-lg btn-block"
-                    type="submit"
+                    type="button"
+                    value="Submit"
                     id="register-btn"
                   />
                 </div>
@@ -66,12 +68,13 @@
     <script src="/imports/jquery.js"></script>
     <script src="/imports/poper.js"></script>
     <script src="/imports/bootstrap.js"></script>
+    <script src="/imports/smackbar.js"></script>
     <script>
       $(() => {
         $("#header").load("/components/header.html");
         $("#footer").load("/components/footer.html");
       });
     </script>
-    
+    <script src="/register/register.js"></script>
   </body>
 </html>

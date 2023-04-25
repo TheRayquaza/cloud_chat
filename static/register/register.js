@@ -1,38 +1,26 @@
-const server = "localhost:8080"
+const password_input = document.getElementById("password-input")
+const username_input = document.getElementById("username-input")
+const register_btn = document.getElementById("register-btn")
 
-password_input = document.getElementById("password-input")
-username_input = document.getElementById("username-input")
-register_btn = document.getElementById("register-btn")
-
-const generic_headers = () => {
-    var tmp = new Headers();
-    tmp.append("Content-Type", "application/json");
-    return tmp;
-}
-
-// generic request options
-const make_request_options = (method, headers, body = undefined) => {
-    if (body)
-        return {
-            method: method,
-            headers: headers,
-            redirect: 'follow',
-            body : body
-        }
-    else
-        return {
-            method : method,
-            headers: headers,
-            redirect : 'follow',
-        }
-}
+const register = (body) =>
+    fetch(document.location.origin + "/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(body)
+    })
 
 register_btn.addEventListener("click", () => {
-    const body = {"username" : username_input.value, "password" : password_input.value}
-    fetch(document.location.origin + "/register", make_request_options("POST", generic_headers(), JSON.stringify(body)))
+    register({"username" : username_input.value, "password" : password_input.value})
     .then(response => response.json())
     .then(response => {
-        if (!response || response.error) $.smackbar({message : response.error ? response.error : "Unable to register you as " + username_input.value});
-        else window.location.assign('/chat.html');
+        if (!response || response.error) $.smackbar({message : response.error ? response.error : "Unable to register you as " + username_input.value})
+        else 
+        {
+            localStorage.setItem("username", response.username)
+            localStorage.setItem("api_key", response.api_key)
+            localStorage.setItem("id", response.id)
+            localStorage.setItem("logged_in", true)
+            window.location.assign('/chat/chat.html')
+        }
     })
 })

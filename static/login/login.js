@@ -21,7 +21,8 @@ login_btn.addEventListener("click", () => {
         if (!response || response.error) $.smackbar({message : response.error ? response.error : "Unable to login to " + username_input.value})
         else 
         {
-            localStorage.setItem("username", username_input.value)
+            localStorage.setItem("id", response.id)
+            localStorage.setItem("username", response.username)
             localStorage.setItem("api_key", response.api_key)
             localStorage.setItem("logged_in", true)
             window.location.assign('/chat/chat.html')
