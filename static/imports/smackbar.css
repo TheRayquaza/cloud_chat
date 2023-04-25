@@ -1,0 +1,49 @@
+.smackbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: table;
+  margin: 1.5rem auto;
+  padding: 1.5rem 2rem;
+  width: 500px;
+  z-index: 1000000000;
+  transform: translateY(200%);
+  transition: .5s transform;
+  opacity: 0;
+  background: #363136;
+  color: #fff;
+  user-select: none;
+}
+@media (max-width: 480px) {
+  .smackbar {
+    width: 100%;
+    margin: 0;
+  }
+}
+.smackbar.smackbar--shown {
+  transform: translateY(0);
+  opacity: 1;
+}
+.smackbar .smackbar-close {
+  float: right;
+  cursor: pointer;
+  margin-left: 1em;
+}
+.smackbar .smackbar-button {
+  float: right;
+  background: inherit;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  margin: -.5em;
+  padding: .5em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.smackbar .smackbar-button:hover {
+  background: #514951;
+}
+.smackbar .smackbar-button:active {
+  background: #6b626b;
+}

@@ -4,13 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/imports/bootstrap.css" />
+    <link rel="stylesheet" href="/imports/smackbar.css">
+    <link rel="stylesheet" href="/imports/font-awesome.css"/>
+    <script src="/imports/font-awesome.js"></script>
     <title>Login</title>
   </head>
 
-  <body>
+  <body class="text-center d-flex flex-column h-100">
+    <!-- Header -->
     <header class="sticky-top" id="header"></header>
 
-    <main class="container py-5">
+    <main class="container py-5 my-auto">
       <div class="row justify-content-center">
         <div class="col-lg-6">
           <div class="card rounded-3 text-black">
@@ -19,14 +23,14 @@
                 <h2 class="mb-4">Login to your account</h2>
 
                 <div class="form-outline mb-4">
-                  <input type="email" class="form-control" placeholder="Email" />
+                  <input type="text" class="form-control" placeholder="Username" id="username-input" />
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="password" class="form-control" placeholder="Password" />
+                  <input type="password" class="form-control" placeholder="Password" id="password-input" />
                 </div>
 
-                <button type="button" class="btn btn-primary btn-block mb-4">
+                <button type="button" id="login-btn" class="btn btn-primary btn-block mb-4">
                   Login
                 </button>
 
@@ -46,16 +50,22 @@
       </div>
     </main>
 
-    <footer id="footer" class="sticky-bottom"></footer>
+    <!-- Footer -->
+    <div class="mt-auto">
+      <footer id="footer" class="sticky-bottom"></footer>
+    </div>
 
     <script src="/imports/jquery.js"></script>
     <script src="/imports/poper.js"></script>
     <script src="/imports/bootstrap.js"></script>
+    <script src="/imports/smackbar.js"></script>
     <script>
       $(() => {
-        $("#header").load("/header.html");
-        $("#footer").load("/footer.html");
+        $("#header").load("/components/header.html");
+        $("#footer").load("/components/footer.html");
       });
     </script>
+    <script src="/login/login.js"></script>
+
   </body>
 </html>

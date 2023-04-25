@@ -4,12 +4,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Home</title>
     <link href="/imports/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/imports/font-awesome.css"/>
+    <script src="/imports/font-awesome.js"></script>
   </head>
 
   <body class="text-center d-flex flex-column h-100">
     
-	<!--Header-->
-	<div class="sticky-top" id="header"></div>
+    <!--Header-->
+    <div class="sticky-top" id="header"></div>
 
     <div class="container my-auto">
       <h1 class="cover-heading">Final project ICT171</h1>
@@ -21,7 +23,7 @@
 
 	<!--Footer-->
     <div class="mt-auto">
-      <div id="footer" class="sticky-bottom"></div>
+      <footer id="footer" class="sticky-bottom"></footer>
     </div>
 
     <script src="/imports/jquery.js"></script>
@@ -29,8 +31,8 @@
     <script src="/imports/bootstrap.js"></script>
     <script>
       $(() => {
-        $("#header").load("/header.html");
-        $("#footer").load("/footer.html");
+        $("#header").load("/components/header.html");
+        $("#footer").load("/components/footer.html");
       });
     </script>
   </body>

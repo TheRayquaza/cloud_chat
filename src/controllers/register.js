@@ -28,13 +28,12 @@ const register = (req, res, next) => {
                         else
                             request.get_user_id(username, id => {
                                 if (!id) res.status(500).json({"error": "Unbale to retrieve info from user " + username})
-                                else {
-                                    res.cookies = {
-                                        "username": username,
-                                        "logged_in": true,
-                                        "api_key": key,
-                                        "id": id
-                                    }
+                                else 
+                                {
+                                    res.session.username = username
+                                    req.session.api_key = key
+                                    req.session.id = id
+                                    req.session.expiresAt = Date.now() + 24 * 60 * 60 * 1000
                                     res.body.success = true
                                     next()
                                 }
