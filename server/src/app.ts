@@ -23,7 +23,7 @@ if (process.env.LOG !== 'true') {
     console.log = function () {};
 }
 
-sequelize.sync()
+sequelize.sync({ force : process.env.FORCE_RELOAD_DB === 'true' })
 .then(() => console.log('-> Tables created!'))
 .catch(err => console.error('-> Error creating tables:', err));
 
@@ -35,14 +35,11 @@ const app = expressWs.app;
 app.use(middleware_log_exit);
 app.use(middleware_log_entry);
 
-// Static content
-app.use(express.static('static'));
-
 app.use(cors());
 app.use(morgan('[info] [morgan]: :method :url :status :res[content-length]B - :response-time ms'));
 
 // Router for documentation
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true, customSiteTitle : "Loqui documentation", isExplorer : true }));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true, customSiteTitle : "Loqui documentation" }));
 
 // Router for api
 app.use('/api', apiRouter);

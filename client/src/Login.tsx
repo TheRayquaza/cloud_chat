@@ -1,108 +1,93 @@
-import { useState } from "react";
-import { Box, Button, Card, CardContent, TextField, Typography,} from "@mui/material";
-
-import Header from "./components/Header.tsx";
-import Footer from "./components/Footer.tsx";
+import {useState} from "react";
+import {Box, Button, Card, CardContent, TextField, Typography} from "@mui/material";
+import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
-        fetch(`${document.location.origin}/api/login`, {
+        fetch(`http://localhost:8080/api/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:8080"
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({username, password}),
         })
-            .then((response) => response.json())
-            .then((response) => {
-                if (!response || response.error) {
-                    // Show snackbar with error message
-                    console.error(
-                        response.error
-                            ? response.error
-                            : `Unable to login to ${username}`
-                    );
-                } else {
-                    localStorage.setItem("id", response.id);
-                    localStorage.setItem("username", response.username);
-                    localStorage.setItem("logged_in", "true");
-                    window.location.assign("/chat");
-                }
-            });
+        .then((response) => response.json())
+        .then((response) => {
+            if (!response || response.error)
+                    toast.error(response.error ? response.error : `Unable to login to ${username}`);
+            else
+            {
+                toast.success(username + " logged in")
+                localStorage.setItem("id", response.id);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("logged_in", "true");
+            }
+        });
     };
 
-    return (
+    return  (
         <Box
             sx={{
                 display: "flex",
-                flexDirection: "column",
-                minHeight: "100vh",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "90vh",
             }}
         >
-            <Header />
-            <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Card sx={{ minWidth: 275 }}>
-                    <CardContent>
-                        <Box sx={{ mb: 2 }}>
-                            <Typography variant="h5">Login to your account</Typography>
-                        </Box>
-                        <Box component="form" noValidate autoComplete="off">
-                            <Box sx={{ mb: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Username"
-                                    variant="outlined"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </Box>
-                            <Box sx={{ mb: 2 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Password"
-                                    variant="outlined"
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </Box>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                fullWidth
-                                onClick={handleLogin}
-                            >
-                                Login
-                            </Button>
-                        </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                pt: 2,
-                            }}
+            <Card sx={{minWidth: 275}}>
+                <CardContent>
+                    <Typography variant="h5" sx={{mb: 2}}>
+                        Login to your account
+                    </Typography>
+                    <Box component="form">
+                        <TextField
+                            fullWidth
+                            label="Username"
+                            type="text"
+                            variant="outlined"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            sx={{mb: 2}}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Password"
+                            variant="outlined"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            sx={{mb: 2}}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            fullWidth
+                            onClick={handleLogin}
+                            sx={{mb: 2}}
                         >
-                            <Typography variant="body2">
-                                Don't have an account?
-                            </Typography>
+                            Login
+                        </Button>
+                        <Typography variant="body2">
+                            Don't have an account?
                             <Button
-                                href="/register/register.html"
+                                component={Link}
+                                to="/register"
                                 variant="outlined"
-                                color="primary"
-                                sx={{ ml: 1 }}
+                                color="secondary"
+                                sx={{ml: 1}}
                             >
                                 Create a new account
                             </Button>
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Box>
-            <Footer />
+                        </Typography>
+                    </Box>
+                </CardContent>
+            </Card>
         </Box>
     );
 };

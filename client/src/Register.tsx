@@ -1,91 +1,96 @@
-import {ChangeEvent, FormEvent, useState} from "react";
-import { Container, Card, CardContent, Typography, TextField, Button, Link } from "@mui/material";
+import {MouseEvent, useState} from "react";
+import { toast } from "react-toastify";
+import {Box, Card, CardContent, Typography, TextField, Button, Link} from "@mui/material";
 
-import Header from "./components/Header.tsx";
-import Footer from "./components/Footer.tsx";
-
-function RegisterPage() {
+function Register(): JSX.Element {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleUsernameChange = (event : ChangeEvent<HTMLInputElement>) => {
-        setUsername(event.target.value);
-    };
 
-    const handlePasswordChange = (event : ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
-    };
-
-    const handleSubmit = (event : FormEvent<HTMLInputElement>) => {
+    const handleClick = (event: MouseEvent<HTMLInputElement>) => {
         event.preventDefault();
-        // Submit registration data
+        fetch(`$http://localhost:8080/api/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+            },
+            body: JSON.stringify({username, password})
+        })
+        .then((response : Response) => response.json())
+        .then((response : any) => {
+            if (!response || response.error)
+                toast.error(response ? response.error : "Unable to register " + username);
+            else
+            {
+                toast.success(username + " registered successfully");
+                localStorage.setItem("id", response.id);
+                localStorage.setItem("username", response.username);
+                localStorage.setItem("logged_in", "true");
+            }
+        });
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-
-            <Header/>
-
-            <div style={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Container maxWidth="sm">
-                    <Card sx={{ boxShadow: 10 }}>
-                        <CardContent sx={{ p: { xs: 4, md: 5 } }}>
-                            <Typography variant="h4" sx={{ mb: { xs: 2, md: 5 } }}>
-                                Create an account
-                            </Typography>
-
-                            <form onSubmit={handleSubmit}>
-                                <div className="row">
-                                    <div className="col-md-6 mb-4">
-                                        <TextField
-                                            label="Username"
-                                            variant="outlined"
-                                            fullWidth
-                                            value={username}
-                                            onChange={handleUsernameChange}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 mb-4">
-                                        <TextField
-                                            label="Password"
-                                            variant="outlined"
-                                            fullWidth
-                                            type="password"
-                                            value={password}
-                                            onChange={handlePasswordChange}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 pt-2">
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        size="large"
-                                        type="submit"
-                                        fullWidth
-                                    >
-                                        Submit
-                                    </Button>
-                                </div>
-                                <br />
-                                <div className="text-center pb-4">
-                                    <Typography variant="body1" sx={{ mb: 0 }}>
-                                        Already have an account?
-                                    </Typography>
-                                    <Link href="/login" variant="button" sx={{ ml: 1 }}>
-                                        Login to your account
-                                    </Link>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </Container>
-            </div>
-
-            <Footer/>
-        </div>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "90vh",
+            }}
+        >
+            <Card sx={{minWidth: 275}}>
+                <CardContent>
+                    <Typography variant="h5" sx={{mb: 2}}>
+                        Create a new account
+                    </Typography>
+                    <Box component="form">
+                        <TextField
+                            fullWidth
+                            label="Username"
+                            type="text"
+                            variant="outlined"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            sx={{mb: 2}}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Password"
+                            variant="outlined"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            sx={{mb: 2}}
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            fullWidth
+                            onClick={handleClick}
+                            sx={{mb: 2}}
+                        >
+                            Register
+                        </Button>
+                        <Typography variant="body2">
+                            You already have an account?
+                            <Button
+                                component={Link}
+                                to="/login"
+                                variant="outlined"
+                                color="secondary"
+                                sx={{ml: 1}}
+                            >
+                                Login to your account
+                            </Button>
+                        </Typography>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Box>
     );
 }
 
-export default RegisterPage;
+export default Register;

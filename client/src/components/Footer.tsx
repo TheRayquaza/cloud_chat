@@ -1,8 +1,8 @@
-import { Container, Grid, Typography } from '@mui/material'
+import { Grid, Typography, Container } from '@mui/material';
 
-function Footer (): JSX.Element {
-  return (
-        <Container maxWidth="xl">
+const Footer = (): JSX.Element => {
+    return (
+        <Container sx={{ mt: 'auto' }}>
             <Grid container justifyContent="center">
                 <Grid item>
                     <Typography variant="body2" color="textSecondary" align="center">
@@ -11,7 +11,7 @@ function Footer (): JSX.Element {
                 </Grid>
             </Grid>
         </Container>
-  )
-}
+    );
+};
 
-export default Footer
+export default Footer;

@@ -1,65 +1,58 @@
-import { useEffect } from 'react'
-import { Grid, Button, Typography, Container } from '@mui/material'
-import { Info, Settings, Storage } from '@mui/icons-material'
+import {useEffect} from 'react'
+import {Grid, Button, Typography, Container} from '@mui/material'
+import {Info, Settings, Storage} from '@mui/icons-material'
 
-import Header from './components/Header.tsx'
-import Footer from './components/Footer.tsx'
-
-function Home (): JSX.Element {
+function Home(): JSX.Element {
     useEffect(() => {
         document.title = 'Home - Loqui Chat'
     }, [])
 
     return (
-        <div>
-            <Header />
-
-            <main>
-                <Container maxWidth="sm">
-                    <Typography
-                        variant="h2"
-                        color="textSecondary"
-                        component="h1"
-                        gutterBottom
+        <Container sx={{py: 8}}>
+            <Typography variant="h2" align="center" color="primary" sx={{mb: 6}}>
+                Welcome to Loqui Chat
+            </Typography>
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item xs={12} sm={6} md={4}>
+                    <Button
+                        href="/about"
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        color="secondary"
+                        startIcon={<Info/>}
+                        sx={{mb: 2}}
                     >
-                        Loqui Chat
-                    </Typography>
-                    <Grid container spacing={2} justifyContent="center">
-                        <Grid item>
-                            <Button
-                                href="/about"
-                                variant="contained"
-                                color="primary"
-                                startIcon={<Info />}
-                            >
-                                Learn more
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                href="/doc"
-                                variant="contained"
-                                color="secondary"
-                                startIcon={<Settings />}
-                            >
-                                API documentation
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                href="/db/db.html"
-                                variant="contained"
-                                startIcon={<Storage />}
-                            >
-                                Database design
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Container>
-            </main>
-
-            <Footer />
-        </div>
+                        Learn more
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <Button
+                        href="/doc"
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        color="primary"
+                        startIcon={<Settings/>}
+                        sx={{mb: 2}}
+                    >
+                        API documentation
+                    </Button>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <Button
+                        href="/db/db.html"
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        color="error"
+                        startIcon={<Storage/>}
+                    >
+                        Database design
+                    </Button>
+                </Grid>
+            </Grid>
+        </Container>
     )
 }
 

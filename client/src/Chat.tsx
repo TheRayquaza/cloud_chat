@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { Paper, TextField, Typography } from '@mui/material';
+import React, {useState} from 'react';
+import {Paper, TextField, Typography} from '@mui/material';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-
-import Header from "./components/Header.tsx";
-import Footer from "./components/Footer.tsx";
 
 const Chat = () => {
     const [messages] = useState([]);
@@ -26,37 +23,31 @@ const Chat = () => {
     };
 
     return (
-        <div>
-            <Header/>
-
-            <Paper>
-                <div >
-                    <ChatBubbleOutlineIcon />
-                    <Typography variant="h6">Chat</Typography>
-                </div>
-                <div>
-                    {messages.map((message, index) => (
-                        <Typography
-                            key={index}
-                            variant="body1"
-                            gutterBottom
-                        >
-                            {message}
-                        </Typography>
-                    ))}
-                </div>
-                <form onSubmit={handleSend}>
-                    <TextField
-                        fullWidth
-                        placeholder="Type a message"
-                        value={input}
-                        onChange={handleInput}
-                    />
-                </form>
-            </Paper>
-
-            <Footer/>
-        </div>
+        <Paper>
+            <div>
+                <ChatBubbleOutlineIcon/>
+                <Typography variant="h6">Chat</Typography>
+            </div>
+            <div>
+                {messages.map((message, index) => (
+                    <Typography
+                        key={index}
+                        variant="body1"
+                        gutterBottom
+                    >
+                        {message}
+                    </Typography>
+                ))}
+            </div>
+            <form onSubmit={handleSend}>
+                <TextField
+                    fullWidth
+                    placeholder="Type a message"
+                    value={input}
+                    onChange={handleInput}
+                />
+            </form>
+        </Paper>
     );
 };
 
