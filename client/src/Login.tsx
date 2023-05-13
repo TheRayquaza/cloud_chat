@@ -3,31 +3,25 @@ import {Box, Button, Card, CardContent, TextField, Typography} from "@mui/materi
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
 
+import { send_request } from "./scripts/request.ts"
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = () => {
-        fetch(`http://localhost:8080/api/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:8080"
-            },
-            body: JSON.stringify({username, password}),
-        })
-        .then((response) => response.json())
-        .then((response) => {
-            if (!response || response.error)
-                    toast.error(response.error ? response.error : `Unable to login to ${username}`);
-            else
-            {
-                toast.success(username + " logged in")
-                localStorage.setItem("id", response.id);
-                localStorage.setItem("username", response.username);
-                localStorage.setItem("logged_in", "true");
-            }
-        });
+    const handleLogin = async (): Promise<void> => {
+        let response : any = await send_request("/api/login", "POST", {"Content-Type": "application/json"}, {username : username, password : password})
+
+        if (!response || response.error)
+            toast.error(response.error ? response.error : `Unable to login ${username}`);
+        else
+        {
+            toast.success(username + " logged in")
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("username", response.username);
+            localStorage.setItem("logged_in", "true");
+            document.location.assign("/chat")
+        }
     };
 
     return  (

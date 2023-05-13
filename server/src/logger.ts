@@ -1,36 +1,36 @@
 import winston from 'winston'
+import path from 'path'
 
-// Create a logger for routes with colorized output
-export const route_logger : winston.Logger = winston.createLogger({
-  level: process.env.LOG !== 'true' ? 'error' : 'info',
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.timestamp(),
-    winston.format.printf(info => `[${info.level}] [router]: ${info.message}`)
-  ),
-  transports: [new winston.transports.Console()]
-})
+// Make the console format
+const make_console_format = (type : string) : winston.Logform.Format =>
+    winston.format.printf((info : winston.Logform.TransformableInfo) => `[${info.level}] [${type}]: ${info.message}`)
+
+// Make the file format
+const make_file_format = () : winston.Logform.Format =>
+    winston.format.printf((info : winston.Logform.TransformableInfo) => `[${info.level}] : ${info.message}`)
+
+// Create a file transport for saving error into logs
+const file_transport = new winston.transports.File({
+    filename: path.join(__dirname, '../logs/error.log'),
+    level: 'error',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        make_file_format()
+    )
+});
+
+// Create a console transport for simple info on stdout
+const console_transport : winston.transports.ConsoleTransportInstance = new winston.transports.Console();
 
 // Create a logger for controllers with yellow colorized output
 export const controller_logger : winston.Logger = winston.createLogger({
   level: process.env.LOG !== 'true' ? 'error' : 'info',
   format: winston.format.combine(
-    winston.format.colorize({all:true, colors:{info:'yellow'}}),
-    winston.format.timestamp(),
-    winston.format.printf(info => `[${info.level}] [controller]: ${info.message}`)
+      winston.format.colorize({all:true, colors:{info:'yellow'}}),
+      winston.format.timestamp(),
+      make_console_format('controller')
   ),
-  transports: [new winston.transports.Console()]
-})
-
-// Create a logger for DB with red colorized output
-const db_logger : winston.Logger = winston.createLogger({
-  level: process.env.LOG !== 'true' ? 'error' : 'info',
-  format: winston.format.combine(
-    winston.format.colorize({all:true, colors:{info:'red'}}),
-    winston.format.timestamp(),
-    winston.format.printf(info => `[${info.level}] [db]: ${info.message}`)
-  ),
-  transports: [new winston.transports.Console()]
+  transports: [console_transport, file_transport]
 })
 
 // Create a logger for DB with red colorized output
@@ -39,9 +39,9 @@ export const ws_logger : winston.Logger = winston.createLogger({
     format: winston.format.combine(
       winston.format.colorize({all:true, colors:{info:'blue'}}),
       winston.format.timestamp(),
-      winston.format.printf(info => `[${info.level}] [ws]: ${info.message}`)
+      make_console_format('ws')
     ),
-    transports: [new winston.transports.Console()]
+    transports: [console_transport, file_transport]
 })
 
 // Create a logger for routes with colorized output
@@ -50,9 +50,9 @@ export const middleware_logger : winston.Logger = winston.createLogger({
     format: winston.format.combine(
       winston.format.colorize({all:true, colors:{info:"green"}}),
       winston.format.timestamp(),
-      winston.format.printf(info => `[${info.level}] [middleware]: ${info.message}`)
+      make_console_format('middleware')
     ),
-    transports: [new winston.transports.Console()]
+    transports: [console_transport, file_transport]
 })
 
 // Create a logger for scripts with colorized output
@@ -61,7 +61,7 @@ export const script_logger : winston.Logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize({all:true}),
     winston.format.timestamp(),
-    winston.format.printf(info => `[${info.level}] [script]: ${info.message}`)
+    make_console_format('script')
   ),
-  transports: [new winston.transports.Console()]
+  transports: [console_transport, file_transport]
 })

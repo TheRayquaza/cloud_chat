@@ -1,10 +1,9 @@
 import { middleware_logger } from "../logger";
 import { Request, Response, NextFunction } from 'express';
-import { CustomResponse } from "../types/CustomResponse";
 
-const log_exit = (req: Request, res: CustomResponse, next: NextFunction) => {
+const log_exit = (req: Request, res: Response, next: NextFunction) => {
   res.on('finish', () =>
-      middleware_logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} ${res.body ? JSON.stringify(res.body) : ''}`)
+      middleware_logger.info(`${req.method} ${req.originalUrl} ${res.statusCode}}`)
   );
   next();
 }

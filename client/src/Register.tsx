@@ -2,35 +2,27 @@ import {MouseEvent, useState} from "react";
 import { toast } from "react-toastify";
 import {Box, Card, CardContent, Typography, TextField, Button, Link} from "@mui/material";
 
+import { send_request } from "./scripts/request.ts"
+
 function Register(): JSX.Element {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
 
-    const handleClick = (event: MouseEvent<HTMLInputElement>) => {
+    const handleClick = async (event: MouseEvent<HTMLInputElement>) : Promise<void> => {
         event.preventDefault();
-        fetch(`$http://localhost:8080/api/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "http://localhost:8080",
-            },
-            body: JSON.stringify({username, password})
-        })
-        .then((response : Response) => response.json())
-        .then((response : any) => {
-            if (!response || response.error)
-                toast.error(response ? response.error : "Unable to register " + username);
-            else
-            {
-                toast.success(username + " registered successfully");
-                localStorage.setItem("id", response.id);
-                localStorage.setItem("username", response.username);
-                localStorage.setItem("logged_in", "true");
-            }
-        });
-    };
-
+        let response: any = await send_request("/api/register", "POST", {"Content-Type": "application/json"}, {username: username, password: password});
+        if (!response || response.error)
+            toast.error(response ? response.error : "Unable to register " + username);
+        else {
+            toast.success(username + " registered successfully");
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("username", response.username);
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("logged_in", "true")
+            window.location.assign("/chat")
+        }
+    }
     return (
         <Box
             sx={{

@@ -3,18 +3,19 @@ import {validate_password, validate_username} from "../validators/register";
 import User from "../db/user";
 import bcrypt from 'bcrypt';
 
-const { controller_logger } = require("../logger");
-const { send_error, send_result } = require("../scripts/send");
-const { createJwt } = require("../scripts/jwt");
+import { controller_logger } from "../logger";
+import { send_error, send_result } from "../scripts/send";
+import { createJwt } from "../scripts/jwt";
 
 const saltRound = 10;
 
 // POST /api/register
-export const register = (req: Request, res: Response) => {
-    controller_logger.info("register a new user");
+export const register = async (req: Request, res: Response) : Promise<void> => {
+    const username: string = req.body.username,
+          password: string = req.body.password;
+    let token : string, hash : string, user : User | null;
 
-    const username: string = req.body.username;
-    const password: string = req.body.password;
+    controller_logger.info("register a new user with name " + username);
 
     if (!username || !password)
         send_error(res, 400, "Both username and password are required");
@@ -22,31 +23,30 @@ export const register = (req: Request, res: Response) => {
         send_error(res, 401, "Username did not meet expectations");
     else if (!validate_password(password))
         send_error(res, 401, "Password did not meet expectations");
-
-    User.findOne({ where: { username: username } })
-    .then(user => {
-        if (user) {
-            send_error(res, 409, "User already exists");
-            return Promise.reject("user already exists");
+    else {
+        try {
+            // Verify if user already exists
+            user = await User.findOne({where: {username: username}});
+            if (user)
+                send_error(res, 409, "User already exists");
+            else {
+                // Create user and send token
+                hash = await bcrypt.hash(password, saltRound);
+                user = await User.create({
+                    id: null,
+                    username: username,
+                    password_hash: hash,
+                    permission: 0,
+                    last_connection: new Date(),
+                    creation_date: new Date()
+                });
+                await user.save();
+                token = await createJwt(user.dataValues.id as number, user.dataValues.username);
+                send_result(res, 200, {token: token, username: user.dataValues.username, id: user.dataValues.id});
+            }
+        } catch (err) {
+            controller_logger.error(err);
+            send_error(res, 500, "Server error");
         }
-        return bcrypt.hash(password, saltRound);
-    })
-    .then(hash => User.create({id : null, username: username, password_hash: hash, permission: 0, last_connection : new Date(), creation_date : new Date()}))
-    .then(instance => instance.save())
-    .then(() => User.findOne({ where: { username: username } }))
-    .then(user => {
-        if (!user)
-        {
-            send_error(res, 500, "Unable to register the new user");
-            return Promise.reject("Unable to register");
-        }
-        else
-            createJwt(user.dataValues.id, user.dataValues.username, (encoded : string) => {
-                send_result(res, {token: encoded, username: user.dataValues.username})
-            });
-    })
-    .catch(err => {
-        controller_logger.error(err);
-        send_error(res, 500, "Server error");
-    });
+    }
 };

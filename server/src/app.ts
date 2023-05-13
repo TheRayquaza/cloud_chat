@@ -10,9 +10,6 @@ import apiRouter from './routers/api';
 import wssHandler from './ws/ws';
 import sequelize from './db/client';
 
-import swaggerUi from 'swagger-ui-express';
-import specs from './docs/specs';
-
 import middleware_log_entry from './middlewares/log_entry';
 import middleware_log_exit from './middlewares/log_exit';
 import {send_error} from "./scripts/send";
@@ -28,7 +25,7 @@ sequelize.sync({ force : process.env.FORCE_RELOAD_DB === 'true' })
 .catch(err => console.error('-> Error creating tables:', err));
 
 // Enable websockets
-var expressWs = require('express-ws')(express());
+const expressWs = require('express-ws')(express());
 const app = expressWs.app;
 
 // Logs
@@ -37,9 +34,6 @@ app.use(middleware_log_entry);
 
 app.use(cors());
 app.use(morgan('[info] [morgan]: :method :url :status :res[content-length]B - :response-time ms'));
-
-// Router for documentation
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs, { explorer: true, customSiteTitle : "Loqui documentation" }));
 
 // Router for api
 app.use('/api', apiRouter);

@@ -7,34 +7,55 @@ import { send_error, send_result, send_success } from "../scripts/send";
 
 // POST /api/conversation
 // required body : name, user_id
-export const new_conversation = (req: Request, res: Response): void => {
+export const new_conversation = async (req: Request, res: Response): Promise<void> => {
     controller_logger.info("new conversation");
-    const name : string = req.body.name;
-    const users_id : Array<string> = req.body.users_id;
-    Conversation.create({
-        id : null,
-        name: name,
-        creation_date: new Date(),
-        edition_date: new Date(),
-    })
-        .then((conversation_instance) => {
-            conversation_instance.save();
-            users_id.forEach((user_id : string) => {
-                    return ConversationUser.create({
-                        id : null,
-                        user_id: parseInt(user_id, 10),
-                        conversation_id: conversation_instance.dataValues.id,
-                    }).then((conversation_user_instance) =>
-                        conversation_user_instance.save()
-                    );
+
+    const {name, users_id} = req.body;
+    let conversation : Conversation, user : User | null, conversation_user : ConversationUser | null,
+        user_instances : Array<User> = [], not_found : boolean = true;
+
+    if (!name || !users_id)
+        send_error(res, 400, "Missing parameters");
+    else {
+        try {
+            for (let i : number = 0; i < users_id.length; i++) {
+                user = await User.findByPk(users_id[i]);
+                if (user)
+                    user_instances.push(user);
+                else {
+                    not_found = false;
+                    break;
                 }
-            );
-            send_success(res);
-        })
-        .catch((err) => {
+            }
+            if (not_found)
+                send_error(res, 404, "One or multiple users do not exist");
+            else {
+                conversation = await Conversation.create({
+                    name: name,
+                    id : null,
+                    creation_date : new Date(),
+                    edition_date : new Date()
+                });
+                for (let i : number = 0; i < user_instances.length; i++) {
+                    conversation_user = await ConversationUser.findOne({ where : { user_id : user_instances[i].dataValues.id, conversation_id : conversation.dataValues.id }});
+                    if (!conversation_user) {
+                        conversation_user = await ConversationUser.create({
+                            id: null,
+                            user_id: user_instances[i].dataValues.id,
+                            conversation_id: conversation.dataValues.id
+                        });
+                        await conversation_user.save();
+                        console.log("Hello world")
+                    }
+                }
+                await conversation.save();
+                send_result(res, 200, conversation);
+            }
+        } catch (err) {
             controller_logger.error(err);
             send_error(res, 500, "Server error");
-        });
+        }
+    }
 };
 
 // DELETE /api/conversation/{id}
@@ -71,8 +92,8 @@ export const get_conversation = (req: Request, res: Response): void => {
 // required body : name
 export const modify_conversation = (req: Request, res: Response): void => {
     const id = req.params.id;
+    const { name } = req.body;
     controller_logger.info("modifying conversation " + id);
-    const name = req.body.name;
     Conversation.update(
         { name: name, edition_date: new Date() },
         { where: { id: id } }

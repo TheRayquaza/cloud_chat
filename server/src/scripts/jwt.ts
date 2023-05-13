@@ -18,9 +18,11 @@ export const verifyJwt = (token: string): Promise<TokenPayload> => {
 };
 
 // Sign and Create a new JWT
-export const createJwt = (id: number, username: string, callback: (encoded?: string) => void): void => {
-    jwt.sign({ id, username }, JWT_SECRET, (err: Error | null, encoded?: string) => {
-        if (err) callback(undefined);
-        else callback(encoded);
+export const createJwt = (id: number, username: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        jwt.sign({ id, username }, JWT_SECRET, (err: Error | null, encoded?: string) => {
+            if (err) reject(err);
+            else resolve(encoded as string);
+        });
     });
-};
+}

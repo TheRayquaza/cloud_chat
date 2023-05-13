@@ -10,6 +10,7 @@ import Home from "./Home.tsx";
 import Chat from "./Chat.tsx";
 import Login from "./Login.tsx";
 import Register from "./Register.tsx";
+import Logout from "./Logout.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 import Default from "./Default.tsx";
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/logout" element={<Logout/>} />
                     <Route path="*" element={<Default/>} />
                 </Routes>
                 <Footer/>

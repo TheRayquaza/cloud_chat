@@ -4,21 +4,27 @@ import { send_error } from "../scripts/send"
 import {Response, NextFunction, Request} from "express"
 import {TokenPayload} from "../scripts/jwt";
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = async (req: Request, res: Response, next: NextFunction) : Promise<void> => {
     middleware_logger.info("authentification")
     const token = req.headers.authorization?.split(" ")[1]
 
-    if (!token) send_error(res, 401, 'No token provided')
+    if (!token)
+        send_error(res, 401, 'No token provided')
     else {
         // Verify JWT and extract user data
-        verifyJwt(token)
-        .then((decoded : TokenPayload) => {
-            if (!decoded) send_error(res, 401, 'Invalid token')
+        try {
+            const decoded: TokenPayload = await verifyJwt(token);
+            if (!decoded)
+                send_error(res, 401, 'Invalid token')
             else {
-                req.body.id = decoded.id
-                req.body.username = decoded.username
+                req.headers["X-id"] = decoded.id.toString()
+                req.headers["X-username"] = decoded.username
                 next()
             }
-        })
+        }
+        catch (err) {
+            middleware_logger.error(err)
+            send_error(res, 500, 'Server error')
+        }
     }
 }

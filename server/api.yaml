@@ -1,0 +1,632 @@
+openapi: 3.0.0
+info:
+  title: Loqui Express API with Swagger
+  version: 0.1.0
+  description: This is a simple CRUD API application made with Express and documented with Swagger
+  license:
+    name: GPL V3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  contact:
+    name: Mateo Lelong
+    email: mateo.lelong@gmail.com
+servers:
+  - url: http://localhost:8080
+components:
+  schemas:
+    AuthData :
+      type: object
+      properties:
+        token:
+          type: string
+          example : token
+        username:
+          type: string
+          example: johndoe
+        id:
+          type: integer
+          example: 1
+    UserData:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+        password:
+          type: string
+          example: mypassword
+      required:
+        - username
+        - password
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+        password:
+          type: string
+          example: mypassword
+        permission:
+          type: integer
+          example: 0
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+        permission:
+          type: integer
+          example: 0
+        last_connection:
+          type: object
+          example: 2020-05-20T14:00:00.000Z
+        creation_date:
+          type: object
+          example: 2020-04-20T14:00:00.000Z
+    MessageData:
+      type: object
+      required:
+        - conversation_id
+        - user_id
+        - content
+      properties:
+        conversation_id:
+          type: integer
+          description: The ID of the conversation to which the message belongs
+          example: 1
+        user_id:
+          type: integer
+          description: The ID of the user who sent the message
+          example: 1
+        content:
+          type: string
+          description: The content of the message
+          example: Hello, world!
+    Message:
+      type: object
+      required:
+        - conversation_id
+        - user_id
+        - content
+      properties:
+        conversation_id:
+          type: integer
+          description: The ID of the conversation to which the message belongs
+          example: 1
+        user_id:
+          type: integer
+          description: The ID of the user who sent the message
+          example: 1
+        content:
+          type: string
+          description: The content of the message
+          example: Hello, world!
+        creation_date:
+          type: object
+          example: 2020-04-20T14:00:00.000Z
+        edition_date:
+          type: object
+          example: 2020-04-20T14:00:00.000Z
+    ConversationData:
+        type: object
+        required:
+            - name
+            - user_id
+        properties:
+            name:
+              type: string
+              description: The name of the conversation
+              example: My conversation
+            user_id:
+              type: integer
+              description: The ID of the user who created the conversation
+              example: 1
+    Conversation:
+        type: object
+        required:
+            - name
+            - users_id
+        properties:
+            name:
+              type: string
+              description: The name of the conversation
+              example: My conversation
+            id:
+              type: integer
+              description: The ID of the conversation
+              example: 1
+            creation_date:
+              type: object
+              example: 2020-04-20T14:00:00.000Z
+            edition_date:
+              type: object
+              example: 2020-04-20T14:00:00.000Z
+    Success :
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: 200
+        success :
+          type : boolean
+          example : true
+  responses:
+    NotFoundError:
+      description: The requested data was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: user not found
+    BadRequestError:
+      description: The request was malformed or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status :
+                type : number
+                example : 400
+              error:
+                type: string
+                example: bad request
+    UnauthorizedError:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status :
+                type : number
+                example : 401
+              error:
+                type: string
+                example: Permission of this user is invalid
+    ForbiddenError:
+      description: Forbidden access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status :
+                type : number
+                example : 403
+              error:
+                type: string
+                example: You are not allowed to access this resource
+    ConflictError:
+      description: The request could not be completed due to a conflict with the current state of the target resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status :
+                type : number
+                example : 409
+              error:
+                type: string
+                example: username already exists
+    ServerError:
+      description: An unexpected error occurred
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status :
+                type : number
+                example : 500
+              error:
+                type: string
+                example: unable to access the db
+    Success :
+      description: The operation was successful
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              status:
+                type: integer
+                example: 200
+  parameters:
+    id:
+      name: id
+      in: path
+      description: ID of the user, message, conversation ...
+      required: true
+      schema:
+        type: integer
+      example: 1
+paths:
+  /api/login:
+    post:
+      tags:
+        - Login
+      summary: Log in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserData"
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema :
+                $ref: "#/components/schemas/AuthData"
+        '400':
+          $ref: "#/components/responses/BadRequestError"
+        '401':
+          $ref: "#/components/responses/UnauthorizedError"
+        '409':
+          $ref: "#/components/responses/ConflictError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /api/register:
+    post:
+      tags:
+        - Register
+      summary: Register a new user
+      description: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserData"
+      responses:
+        200:
+          description: Successfully registered
+          content:
+            application/json:
+              schema :
+                $ref: "#/components/schemas/AuthData"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        409:
+          $ref : "#/components/responses/ConflictError"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /api/user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by ID
+      description: Get user by ID
+      parameters:
+        - $ref : "#/components/parameters/id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema :
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - User
+      summary: Delete a user by ID
+      description: Delete a user by ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        200:
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/Success'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
+    put:
+      summary: Update a user by ID
+      description: Update the username, password, or permission of a user
+      tags:
+        - User
+      parameters:
+        - $ref : "#/components/parameters/id"
+      requestBody:
+        description: The properties to update on the user
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/UserUpdate'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /api/user:
+    get:
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      description: Create a new user with a unique username and a strong password
+      parameters:
+        - name: user
+          in: body
+          description: The user object to create
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserData'
+      responses:
+        200:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        403:
+          $ref: "#/components/responses/ForbiddenError"
+        404:
+          $ref : "#/components/responses/NotFoundError"
+        500:
+          $ref: "#/components/responses/ServerError"
+  /api/message/{id}:
+    get:
+        tags:
+            - Message
+        summary: Get a message by ID
+        description: Get a message by ID
+        parameters:
+            - $ref: '#/components/parameters/id'
+        responses:
+            200:
+            description: OK
+            content:
+                application/json:
+                schema:
+                    $ref: '#/components/schemas/Message'
+            400:
+              $ref: '#/components/responses/BadRequestError'
+            404:
+              $ref: '#/components/responses/NotFoundError'
+            500:
+              $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - Message
+      summary: Deletes a message by ID
+      description: Deletes a message by ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        204:
+          $ref: '#/components/responses/Success'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - Message
+      summary: Update a message
+      description: Update the content of a message by its ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: The message to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageData"
+      responses:
+        200:
+          description: Message updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /api/message:
+    get:
+      summary: Get a message by ID
+      description: Get a message by ID
+      tags:
+        - Message
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: "#/components/schemas/Message"
+        400:
+          $ref: "#/components/responses/BadRequestError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
+        500:
+          $ref: "#/components/responses/ServerError"
+    post:
+      tags:
+        - Message
+      summary: Create a new message
+      description: Create a new message
+      requestBody:
+        description: The message to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/MessageData"
+      responses:
+        200:
+          description: Message created successfully
+          content:
+            application/json:
+              schema:
+                $ref : "#/components/schemas/Message"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        500:
+          $ref: '#/components/responses/ServerError'
+  /api/conversation:
+      get:
+          tags:
+            - Conversation
+          summary: Get all conversations
+          description: Get all conversations
+          responses:
+          200:
+              description: OK
+              content:
+              application/json:
+                  schema:
+                  type: array
+                  items:
+                      $ref: '#/components/schemas/Conversation'
+          404:
+              $ref: '#/components/responses/NotFoundError'
+          500:
+              $ref: '#/components/responses/ServerError'
+      post:
+          tags:
+            - Conversation
+          summary: Create a new conversation
+          description: Create a new conversation
+          requestBody:
+            description: The conversation to create
+            required: true
+            content:
+                application/json:
+                schema:
+                    $ref : "#/components/schemas/ConversationData"
+          responses:
+          200:
+              description: Conversation created successfully
+              content:
+              application/json:
+                  schema:
+                  $ref : "#/components/schemas/Conversation"
+          400:
+              $ref: '#/components/responses/BadRequestError'
+          500:
+              $ref: '#/components/responses/ServerError'
+  /api/conversation/{id}:
+    get:
+        tags:
+            - Conversation
+        summary: Get a conversation by ID
+        description: Get a conversation by ID
+        parameters:
+            - $ref: '#/components/parameters/id'
+        responses:
+            200:
+            description: OK
+            content:
+                application/json:
+                schema:
+                    $ref: '#/components/schemas/Conversation'
+            400:
+              $ref: '#/components/responses/BadRequestError'
+            404:
+              $ref: '#/components/responses/NotFoundError'
+            500:
+              $ref: '#/components/responses/ServerError'
+    delete:
+        tags:
+            - Conversation
+        summary: Deletes a conversation by ID
+        description: Deletes a conversation by ID
+        parameters:
+            - $ref: '#/components/parameters/id'
+        responses:
+            204:
+              $ref: '#/components/responses/Success'
+            400:
+              $ref: '#/components/responses/BadRequestError'
+            404:
+              $ref: '#/components/responses/NotFoundError'
+            500:
+              $ref: '#/components/responses/ServerError'
+    put:
+        tags:
+          - Conversation
+        summary: Update a conversation
+        description: Update the content of a conversation by its ID
+        parameters:
+            - $ref: '#/components/parameters/id'
+        requestBody:
+            description: The conversation to create
+            required: true
+            content:
+                application/json:
+                schema:
+                    $ref: "#/components/schemas/ConversationData"
+        responses:
+            200:
+            description: Conversation updated successfully
+            content:
+                application/json:
+                schema:
+                    $ref: "#/components/schemas/Conversation"
+            400:
+              $ref: '#/components/responses/BadRequestError'
+            404:
+              $ref: '#/components/responses/NotFoundError'
+            500:
+              $ref: '#/components/responses/ServerError'
