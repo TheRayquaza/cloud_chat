@@ -1,9 +1,12 @@
 import {Request, Response} from "express";
-import {validate_password, validate_username} from "../validators/register";
-import User from "../db/user";
 import bcrypt from 'bcrypt';
 
+import User from "../db/user";
+
+import {validate_password, validate_username} from "../validators/register";
+
 import { controller_logger } from "../logger";
+
 import { send_error, send_result } from "../scripts/send";
 import { createJwt } from "../scripts/jwt";
 
@@ -32,17 +35,10 @@ export const register = async (req: Request, res: Response) : Promise<void> => {
             else {
                 // Create user and send token
                 hash = await bcrypt.hash(password, saltRound);
-                user = await User.create({
-                    id: null,
-                    username: username,
-                    password_hash: hash,
-                    permission: 0,
-                    last_connection: new Date(),
-                    creation_date: new Date()
-                });
+                user = await User.create({ id: null,  username: username,  password_hash: hash, permission: 0, last_connection: new Date(), creation_date: new Date()});
                 await user.save();
                 token = await createJwt(user.dataValues.id as number, user.dataValues.username);
-                send_result(res, 200, {token: token, username: user.dataValues.username, id: user.dataValues.id});
+                send_result(res, 201, {token: token, username: user.dataValues.username, id: user.dataValues.id});
             }
         } catch (err) {
             controller_logger.error(err);

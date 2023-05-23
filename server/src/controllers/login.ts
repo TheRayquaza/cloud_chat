@@ -24,7 +24,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                     send_error(res, 401, "Password is invalid");
                 else {
                     token = await createJwt(user.dataValues.id as number, user.dataValues.username);
-                    send_result(res, 201, {token: token, username: user.dataValues.username, id: user.dataValues.id});
+                    send_result(res, 200, {token: token, username: user.dataValues.username, id: user.dataValues.id});
                 }
             }
         } catch (err) {

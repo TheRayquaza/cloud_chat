@@ -4,9 +4,9 @@
   "description": "Cloud chat based on a cloud AWS instance",
   "main": "src/app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
     "build": "npx tsc",
-    "start": "clear && npx tsc && node dist/app.js",
+    "start": "clear && node dist/app.js",
     "dev": "clear && npx tsc-watch --onSuccess \"node ./dist/app.js\""
   },
   "repository": {
@@ -40,16 +40,22 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@jest/environment": "^29.5.0",
+    "@jest/globals": "^29.5.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/express-serve-static-core": "^4.17.34",
     "@types/express-ws": "^3.0.1",
+    "@types/jest": "^29.5.1",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.16.3",
     "@types/sequelize": "^4.28.15",
     "@types/winston": "^2.4.4",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   }
 }

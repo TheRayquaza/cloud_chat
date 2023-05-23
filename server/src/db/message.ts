@@ -10,7 +10,13 @@ interface MessageAttributes {
     user_id: number | null;
 }
 
-class Message extends Model<MessageAttributes>{}
+class Message extends Model<MessageAttributes>{
+    // Delete this
+    async delete() : Promise<void> {
+        await this.destroy();
+    }
+
+}
 
 Message.init(
     {

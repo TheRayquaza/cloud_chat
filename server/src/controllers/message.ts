@@ -18,33 +18,17 @@ export const new_message = async (req: Request, res: Response) : Promise<void> =
     else {
         try {
             conversation = await Conversation.findByPk(conversation_id);
-            if (!conversation)
-                send_error(res, 404, "Conversation not found");
+            user = await User.findByPk(user_id);
+            if (!conversation || !user)
+                send_error(res, 404, "Conversation or user not found");
             else {
-                user = await User.findByPk(user_id);
-                if (!user)
-                    send_error(res, 404, "User not found");
+                conversation_user = await ConversationUser.findOne({where: { conversation_id: conversation_id, user_id: user_id}});
+                if (!conversation_user)
+                    send_error(res, 404, "User not in conversation");
                 else {
-                    conversation_user = await ConversationUser.findOne({
-                        where: {
-                            conversation_id: conversation_id,
-                            user_id: user_id
-                        }
-                    });
-                    if (!conversation_user)
-                        send_error(res, 404, "User not in conversation");
-                    else {
-                        message = await Message.create({
-                            id: null,
-                            content: content,
-                            edition_date: new Date(),
-                            creation_date: new Date(),
-                            user_id: user.dataValues.id,
-                            conversation_id: conversation.dataValues.id,
-                        })
-                        await message.save();
-                        send_result(res, 201, message);
-                    }
+                    message = await Message.create({id: null, content: content, edition_date: new Date(), creation_date: new Date(), user_id: user.dataValues.id, conversation_id: conversation.dataValues.id,});
+                    await message.save();
+                    send_result(res, 201, message);
                 }
             }
         }
@@ -57,22 +41,18 @@ export const new_message = async (req: Request, res: Response) : Promise<void> =
 
 // DELETE /api/message/{id}
 export const delete_message = async (req: Request, res: Response) : Promise<void> => {
-    controller_logger("Delete message")
+    const id = req.params.id;
+    controller_logger("Delete message");
     try {
-        if (!req.params.id)
-            send_error(res, 400, "Missing parameters");
-        else {
-            const id: number = parseInt(req.params.id, 10);
-            controller_logger.info("delete message " + id);
-            const nb: number = await Message.destroy({where: {id: id}})
+        const id: number = parseInt(req.params.id, 10);
+        controller_logger.info("delete message " + id);
+        const nb: number = await Message.destroy({where: {id: id}})
 
-            if (nb === 0)
-                send_error(res, 404, "Message not found");
-            else
-                send_success(res, 204);
-        }
-    }
-    catch (err) {
+        if (nb === 0)
+            send_error(res, 404, "Message not found");
+        else
+            send_success(res, 204);
+    } catch (err) {
         controller_logger.error(err);
         send_error(res, 500, "Server error");
     }
@@ -102,10 +82,10 @@ export const get_message = async (req: Request, res: Response) : Promise<void> =
 };
 
 // GET /api/message
-export const get_messages = async (req: Request, res: Response) : Promise<void> => {
+export const get_all_message = async (req: Request, res: Response) : Promise<void> => {
     controller_logger.info("Get messages");
     try {
-        const messages = await Message.findAll();
+        const messages : Message[] = await Message.findAll();
         send_result(res, 200, messages);
     } catch (err) {
         controller_logger.error(err);
@@ -129,7 +109,8 @@ export const modify_message = async (req: Request, res: Response) : Promise<void
             if (!message)
                 send_error(res, 404, "Message not found");
             else {
-                message.dataValues.content = content;
+                message.setDataValue("content",content);
+                message.setDataValue("edition_date", new Date());
                 await message.save();
                 send_result(res, 200, message);
             }

@@ -7,7 +7,7 @@ export const user_perm = async (req: Request, res: Response, next: NextFunction)
     middleware_logger.info("user permissions for user " + req.headers["X-id"]);
     const id : string = req.headers["X-id"] as string;
     const user : User | null = await User.findByPk(parseInt(id));
-    if (!user || user.dataValues.permission !== 1)
+    if (!user || user.dataValues.permission != 1)
         send_error(res, 401, 'Unauthorized access');
     else
         next();

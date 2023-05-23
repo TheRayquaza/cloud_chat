@@ -4,9 +4,20 @@
         "module": "commonjs",
         "outDir": "./dist",
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+	"sourceMap" : true
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "files": true,
+        "compilerOptions": {
+            "rootDir": "."
+        }
     },
     "include": [
         "./src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
     ]
 }

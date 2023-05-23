@@ -109,48 +109,64 @@ components:
           type: object
           example: 2020-04-20T14:00:00.000Z
     ConversationData:
-        type: object
-        required:
-            - name
-            - user_id
-        properties:
-            name:
-              type: string
-              description: The name of the conversation
-              example: My conversation
-            user_id:
-              type: integer
-              description: The ID of the user who created the conversation
-              example: 1
-    Conversation:
-        type: object
-        required:
-            - name
-            - users_id
-        properties:
-            name:
-              type: string
-              description: The name of the conversation
-              example: My conversation
-            id:
-              type: integer
-              description: The ID of the conversation
-              example: 1
-            creation_date:
-              type: object
-              example: 2020-04-20T14:00:00.000Z
-            edition_date:
-              type: object
-              example: 2020-04-20T14:00:00.000Z
-    Success :
       type: object
+      required:
+        - name
+        - users_id
       properties:
-        status:
-          type: boolean
-          example: 200
-        success :
-          type : boolean
-          example : true
+        name:
+          type: string
+          description: The name of the conversation
+          example: My conversation
+        users_id:
+          type: array
+          description: The ID of the user who is in the conversation
+          items :
+            type : integer
+            example : 1
+    ConversationDataPut:
+      type: object
+      required:
+        - name
+        - removed_users
+        - added_users
+      properties:
+        name:
+          type: string
+          description: The name of the conversation
+          example: My conversation
+        removed_users:
+          type: array
+          description: The ID of the user who will be removed from the conversation
+          items :
+            type : integer
+            example : 1
+        added_users:
+          type: array
+          description: The ID of the user who will be added in the conversation
+          items :
+            type : integer
+            example : 1
+    Conversation:
+      type: object
+      required:
+        - name
+        - users_id
+      properties:
+        name:
+          type: string
+          description: The name of the conversation
+          example: My conversation
+        id:
+          type: integer
+          description: The ID of the conversation
+          example: 1
+        creation_date:
+          type: object
+          example: 2020-04-20T14:00:00.000Z
+        edition_date:
+          type: object
+          example: 2020-04-20T14:00:00.000Z
   responses:
     NotFoundError:
       description: The requested data was not found
@@ -265,19 +281,19 @@ paths:
             schema:
               $ref: "#/components/schemas/UserData"
       responses:
-        '200':
+        200:
           description: Successfully logged in
           content:
             application/json:
               schema :
                 $ref: "#/components/schemas/AuthData"
-        '400':
+        400:
           $ref: "#/components/responses/BadRequestError"
-        '401':
+        401:
           $ref: "#/components/responses/UnauthorizedError"
-        '409':
+        409:
           $ref: "#/components/responses/ConflictError"
-        '500':
+        500:
           $ref: "#/components/responses/ServerError"
   /api/register:
     post:
@@ -315,18 +331,16 @@ paths:
       parameters:
         - $ref : "#/components/parameters/id"
       responses:
-        "200":
+        200:
           description: OK
           content:
             application/json:
               schema :
                 $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/BadRequestError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          description: Internal Server Error
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        500:
+          $ref : "#/components/responses/ServerError"
     delete:
       tags:
         - User
@@ -336,11 +350,7 @@ paths:
         - $ref: "#/components/parameters/id"
       responses:
         200:
-          description: User deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref : '#/components/schemas/Success'
+          $ref : '#/components/responses/Success'
         400:
           $ref: '#/components/responses/BadRequestError'
         404:
@@ -414,33 +424,33 @@ paths:
                 $ref: '#/components/schemas/User'
         400:
           $ref: "#/components/responses/BadRequestError"
-        403:
-          $ref: "#/components/responses/ForbiddenError"
-        404:
-          $ref : "#/components/responses/NotFoundError"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        409:
+          $ref : "#/components/responses/ConflictError"
         500:
           $ref: "#/components/responses/ServerError"
   /api/message/{id}:
     get:
-        tags:
-            - Message
-        summary: Get a message by ID
-        description: Get a message by ID
-        parameters:
-            - $ref: '#/components/parameters/id'
-        responses:
-            200:
-            description: OK
-            content:
-                application/json:
-                schema:
-                    $ref: '#/components/schemas/Message'
-            400:
-              $ref: '#/components/responses/BadRequestError'
-            404:
-              $ref: '#/components/responses/NotFoundError'
-            500:
-              $ref: '#/components/responses/ServerError'
+      tags:
+        - Message
+      summary: Get a message by ID
+      description: Get a message by ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
     delete:
       tags:
         - Message
@@ -525,108 +535,88 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
   /api/conversation:
-      get:
-          tags:
-            - Conversation
-          summary: Get all conversations
-          description: Get all conversations
-          responses:
-          200:
-              description: OK
-              content:
-              application/json:
-                  schema:
-                  type: array
-                  items:
-                      $ref: '#/components/schemas/Conversation'
-          404:
-              $ref: '#/components/responses/NotFoundError'
-          500:
-              $ref: '#/components/responses/ServerError'
-      post:
-          tags:
-            - Conversation
-          summary: Create a new conversation
-          description: Create a new conversation
-          requestBody:
-            description: The conversation to create
-            required: true
-            content:
-                application/json:
-                schema:
-                    $ref : "#/components/schemas/ConversationData"
-          responses:
-          200:
-              description: Conversation created successfully
-              content:
-              application/json:
-                  schema:
-                  $ref : "#/components/schemas/Conversation"
-          400:
-              $ref: '#/components/responses/BadRequestError'
-          500:
-              $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Conversation
+      summary: Create a new conversation
+      description: Create a new conversation
+      requestBody:
+        description: The conversation to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref : "#/components/schemas/ConversationData"
+      responses:
+        200:
+          description: Conversation created successfully
+          content:
+            application/json:
+              schema:
+                $ref : "#/components/schemas/Conversation"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        500:
+          $ref: '#/components/responses/ServerError'
   /api/conversation/{id}:
     get:
-        tags:
-            - Conversation
-        summary: Get a conversation by ID
-        description: Get a conversation by ID
-        parameters:
-            - $ref: '#/components/parameters/id'
-        responses:
-            200:
-            description: OK
-            content:
-                application/json:
-                schema:
-                    $ref: '#/components/schemas/Conversation'
-            400:
-              $ref: '#/components/responses/BadRequestError'
-            404:
-              $ref: '#/components/responses/NotFoundError'
-            500:
-              $ref: '#/components/responses/ServerError'
+      tags:
+        - Conversation
+      summary: Get a conversation by ID
+      description: Get a conversation by ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
     delete:
-        tags:
-            - Conversation
-        summary: Deletes a conversation by ID
-        description: Deletes a conversation by ID
-        parameters:
-            - $ref: '#/components/parameters/id'
-        responses:
-            204:
-              $ref: '#/components/responses/Success'
-            400:
-              $ref: '#/components/responses/BadRequestError'
-            404:
-              $ref: '#/components/responses/NotFoundError'
-            500:
-              $ref: '#/components/responses/ServerError'
+      tags:
+        - Conversation
+      summary: Deletes a conversation by ID
+      description: Deletes a conversation by ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        204:
+          $ref: '#/components/responses/Success'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'
     put:
-        tags:
-          - Conversation
-        summary: Update a conversation
-        description: Update the content of a conversation by its ID
-        parameters:
-            - $ref: '#/components/parameters/id'
-        requestBody:
-            description: The conversation to create
-            required: true
-            content:
-                application/json:
-                schema:
-                    $ref: "#/components/schemas/ConversationData"
-        responses:
-            200:
-            description: Conversation updated successfully
-            content:
-                application/json:
-                schema:
-                    $ref: "#/components/schemas/Conversation"
-            400:
-              $ref: '#/components/responses/BadRequestError'
-            404:
-              $ref: '#/components/responses/NotFoundError'
-            500:
-              $ref: '#/components/responses/ServerError'
+      tags:
+        - Conversation
+      summary: Update a conversation
+      description: Update the content of a conversation by its ID
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: The conversation to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationDataPut"
+      responses:
+        200:
+          description: Conversation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        400:
+          $ref: '#/components/responses/BadRequestError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        500:
+          $ref: '#/components/responses/ServerError'

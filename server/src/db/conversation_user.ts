@@ -7,7 +7,13 @@ interface ConversationUserAttributes {
     user_id : number | null;
 }
 
-class ConversationUser extends Model<ConversationUserAttributes> {}
+class ConversationUser extends Model<ConversationUserAttributes> {
+
+    // Delete this
+    async delete() : Promise<void> {
+        await this.destroy();
+    }
+}
 
 ConversationUser.init({
     id: {
