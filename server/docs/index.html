@@ -1,0 +1,1303 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Loqui Express API with Swagger</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>Loqui Express API with Swagger</h1>
+    <div class="app-desc">Simple CRUD API application made with Express and documented with Swagger</div>
+    <div class="app-desc">More information: <a href="https://openapi-generator.tech">https://openapi-generator.tech</a></div>
+    <div class="app-desc">Contact Info: <a href="mateo.lelong@gmail.com">mateo.lelong@gmail.com</a></div>
+    <div class="app-desc">Version: 0.1.0</div>
+    <div class="app-desc">BasePath:</div>
+    <div class="license-info">GPL V3</div>
+    <div class="license-url">https://www.gnu.org/licenses/gpl-3.0.en.html</div>
+  <h2>Access</h2>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Conversation">Conversation</a></h4>
+  <ul>
+  <li><a href="#apiConversationIdDelete"><code><span class="http-method">delete</span> /api/conversation/{id}</code></a></li>
+  <li><a href="#apiConversationIdGet"><code><span class="http-method">get</span> /api/conversation/{id}</code></a></li>
+  <li><a href="#apiConversationIdPut"><code><span class="http-method">put</span> /api/conversation/{id}</code></a></li>
+  <li><a href="#apiConversationPost"><code><span class="http-method">post</span> /api/conversation</code></a></li>
+  </ul>
+  <h4><a href="#Login">Login</a></h4>
+  <ul>
+  <li><a href="#apiLoginPost"><code><span class="http-method">post</span> /api/login</code></a></li>
+  </ul>
+  <h4><a href="#Message">Message</a></h4>
+  <ul>
+  <li><a href="#apiMessageIdDelete"><code><span class="http-method">delete</span> /api/message/{id}</code></a></li>
+  <li><a href="#apiMessageIdGet"><code><span class="http-method">get</span> /api/message/{id}</code></a></li>
+  <li><a href="#apiMessageIdPut"><code><span class="http-method">put</span> /api/message/{id}</code></a></li>
+  <li><a href="#apiMessagePost"><code><span class="http-method">post</span> /api/message</code></a></li>
+  </ul>
+  <h4><a href="#Register">Register</a></h4>
+  <ul>
+  <li><a href="#apiRegisterPost"><code><span class="http-method">post</span> /api/register</code></a></li>
+  </ul>
+  <h4><a href="#User">User</a></h4>
+  <ul>
+  <li><a href="#apiUserGet"><code><span class="http-method">get</span> /api/user</code></a></li>
+  <li><a href="#apiUserIdDelete"><code><span class="http-method">delete</span> /api/user/{id}</code></a></li>
+  <li><a href="#apiUserIdGet"><code><span class="http-method">get</span> /api/user/{id}</code></a></li>
+  <li><a href="#apiUserIdPut"><code><span class="http-method">put</span> /api/user/{id}</code></a></li>
+  <li><a href="#apiUserPost"><code><span class="http-method">post</span> /api/user</code></a></li>
+  </ul>
+
+  <h1><a name="Conversation">Conversation</a></h1>
+  <div class="method"><a name="apiConversationIdDelete"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /api/conversation/{id}</code></pre></div>
+    <div class="method-summary">Deletes a conversation by ID (<span class="nickname">apiConversationIdDelete</span>)</div>
+    <div class="method-notes">Deletes a conversation by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "success" : true,
+  "status" : 200
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    The operation was successful
+        <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiConversationIdGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/conversation/{id}</code></pre></div>
+    <div class="method-summary">Get a conversation by ID (<span class="nickname">apiConversationIdGet</span>)</div>
+    <div class="method-notes">Get a conversation by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Conversation">Conversation</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "edition_date" : "2020-04-20T14:00:00.000Z",
+  "name" : "My conversation",
+  "id" : 1,
+  "creation_date" : "2020-04-20T14:00:00.000Z"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Conversation">Conversation</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiConversationIdPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /api/conversation/{id}</code></pre></div>
+    <div class="method-summary">Update a conversation (<span class="nickname">apiConversationIdPut</span>)</div>
+    <div class="method-notes">Update the content of a conversation by its ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">ConversationDataPut <a href="#ConversationDataPut">ConversationDataPut</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Conversation">Conversation</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "edition_date" : "2020-04-20T14:00:00.000Z",
+  "name" : "My conversation",
+  "id" : 1,
+  "creation_date" : "2020-04-20T14:00:00.000Z"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Conversation updated successfully
+        <a href="#Conversation">Conversation</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiConversationPost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/conversation</code></pre></div>
+    <div class="method-summary">Create a new conversation (<span class="nickname">apiConversationPost</span>)</div>
+    <div class="method-notes">Create a new conversation</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">ConversationData <a href="#ConversationData">ConversationData</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Conversation">Conversation</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "edition_date" : "2020-04-20T14:00:00.000Z",
+  "name" : "My conversation",
+  "id" : 1,
+  "creation_date" : "2020-04-20T14:00:00.000Z"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Conversation created successfully
+        <a href="#Conversation">Conversation</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Login">Login</a></h1>
+  <div class="method"><a name="apiLoginPost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/login</code></pre></div>
+    <div class="method-summary">Log in a user (<span class="nickname">apiLoginPost</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">UserData <a href="#UserData">UserData</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#AuthData">AuthData</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "id" : 1,
+  "token" : "token",
+  "username" : "johndoe"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Successfully logged in
+        <a href="#AuthData">AuthData</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized access
+        <a href="#_api_login_post_401_response">_api_login_post_401_response</a>
+    <h4 class="field-label">409</h4>
+    The request could not be completed due to a conflict with the current state of the target resource
+        <a href="#_api_login_post_409_response">_api_login_post_409_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Message">Message</a></h1>
+  <div class="method"><a name="apiMessageIdDelete"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /api/message/{id}</code></pre></div>
+    <div class="method-summary">Deletes a message by ID (<span class="nickname">apiMessageIdDelete</span>)</div>
+    <div class="method-notes">Deletes a message by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "success" : true,
+  "status" : 200
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    The operation was successful
+        <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiMessageIdGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/message/{id}</code></pre></div>
+    <div class="method-summary">Get a message by ID (<span class="nickname">apiMessageIdGet</span>)</div>
+    <div class="method-notes">Get a message by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "success" : true,
+  "status" : 200
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The operation was successful
+        <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiMessageIdPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /api/message/{id}</code></pre></div>
+    <div class="method-summary">Update a message (<span class="nickname">apiMessageIdPut</span>)</div>
+    <div class="method-notes">Update the content of a message by its ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">MessageData <a href="#MessageData">MessageData</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Message">Message</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "edition_date" : "2020-04-20T14:00:00.000Z",
+  "user_id" : 1,
+  "conversation_id" : 1,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "content" : "Hello, world!"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Message updated successfully
+        <a href="#Message">Message</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiMessagePost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/message</code></pre></div>
+    <div class="method-summary">Create a new message (<span class="nickname">apiMessagePost</span>)</div>
+    <div class="method-notes">Create a new message</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">MessageData <a href="#MessageData">MessageData</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Message">Message</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "edition_date" : "2020-04-20T14:00:00.000Z",
+  "user_id" : 1,
+  "conversation_id" : 1,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "content" : "Hello, world!"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Message created successfully
+        <a href="#Message">Message</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Register">Register</a></h1>
+  <div class="method"><a name="apiRegisterPost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/register</code></pre></div>
+    <div class="method-summary">Register a new user (<span class="nickname">apiRegisterPost</span>)</div>
+    <div class="method-notes">Register a new user</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">UserData <a href="#UserData">UserData</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#AuthData">AuthData</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "id" : 1,
+  "token" : "token",
+  "username" : "johndoe"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Successfully registered
+        <a href="#AuthData">AuthData</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized access
+        <a href="#_api_login_post_401_response">_api_login_post_401_response</a>
+    <h4 class="field-label">409</h4>
+    The request could not be completed due to a conflict with the current state of the target resource
+        <a href="#_api_login_post_409_response">_api_login_post_409_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="User">User</a></h1>
+  <div class="method"><a name="apiUserGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/user</code></pre></div>
+    <div class="method-summary">Get all users (<span class="nickname">apiUserGet</span>)</div>
+    <div class="method-notes">Get all users</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#User">User</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "last_connection" : "2020-05-20T14:00:00.000Z",
+  "permission" : 0,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "username" : "johndoe"
+}, {
+  "last_connection" : "2020-05-20T14:00:00.000Z",
+  "permission" : 0,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "username" : "johndoe"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiUserIdDelete"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /api/user/{id}</code></pre></div>
+    <div class="method-summary">Delete a user by ID (<span class="nickname">apiUserIdDelete</span>)</div>
+    <div class="method-notes">Delete a user by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "success" : true,
+  "status" : 200
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The operation was successful
+        <a href="#_api_user__id__delete_200_response">_api_user__id__delete_200_response</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiUserIdGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /api/user/{id}</code></pre></div>
+    <div class="method-summary">Get user by ID (<span class="nickname">apiUserIdGet</span>)</div>
+    <div class="method-notes">Get user by ID</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "last_connection" : "2020-05-20T14:00:00.000Z",
+  "permission" : 0,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "username" : "johndoe"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#User">User</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized access
+        <a href="#_api_login_post_401_response">_api_login_post_401_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiUserIdPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /api/user/{id}</code></pre></div>
+    <div class="method-summary">Update a user by ID (<span class="nickname">apiUserIdPut</span>)</div>
+    <div class="method-notes">Update the username, password, or permission of a user</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">id (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; ID of the user, message, conversation ... default: null </div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">UserUpdate <a href="#UserUpdate">UserUpdate</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#UserUpdate">UserUpdate</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "password" : "mypassword",
+  "permission" : 0,
+  "username" : "johndoe"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    User updated successfully
+        <a href="#UserUpdate">UserUpdate</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">404</h4>
+    The requested data was not found
+        <a href="#_api_user__id__put_404_response">_api_user__id__put_404_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="apiUserPost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /api/user</code></pre></div>
+    <div class="method-summary">Create a new user (<span class="nickname">apiUserPost</span>)</div>
+    <div class="method-notes">Create a new user with a unique username and a strong password</div>
+
+
+
+
+    <h3 class="field-label">Request headers</h3>
+    <div class="field-items">
+      <div class="param">user (required)</div>
+
+      <div class="param-desc"><span class="param-type">Header Parameter</span> &mdash; The user object to create default: null </div>
+
+    </div>  <!-- field-items -->
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#User">User</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "last_connection" : "2020-05-20T14:00:00.000Z",
+  "permission" : 0,
+  "creation_date" : "2020-04-20T14:00:00.000Z",
+  "username" : "johndoe"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    User created successfully
+        <a href="#User">User</a>
+    <h4 class="field-label">400</h4>
+    The request was malformed or invalid
+        <a href="#_api_login_post_400_response">_api_login_post_400_response</a>
+    <h4 class="field-label">401</h4>
+    Unauthorized access
+        <a href="#_api_login_post_401_response">_api_login_post_401_response</a>
+    <h4 class="field-label">409</h4>
+    The request could not be completed due to a conflict with the current state of the target resource
+        <a href="#_api_login_post_409_response">_api_login_post_409_response</a>
+    <h4 class="field-label">500</h4>
+    An unexpected error occurred
+        <a href="#_api_login_post_500_response">_api_login_post_500_response</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#AuthData"><code>AuthData</code> - </a></li>
+    <li><a href="#Conversation"><code>Conversation</code> - </a></li>
+    <li><a href="#ConversationData"><code>ConversationData</code> - </a></li>
+    <li><a href="#ConversationDataPut"><code>ConversationDataPut</code> - </a></li>
+    <li><a href="#Message"><code>Message</code> - </a></li>
+    <li><a href="#MessageData"><code>MessageData</code> - </a></li>
+    <li><a href="#User"><code>User</code> - </a></li>
+    <li><a href="#UserData"><code>UserData</code> - </a></li>
+    <li><a href="#UserUpdate"><code>UserUpdate</code> - </a></li>
+    <li><a href="#_api_login_post_400_response"><code>_api_login_post_400_response</code> - </a></li>
+    <li><a href="#_api_login_post_401_response"><code>_api_login_post_401_response</code> - </a></li>
+    <li><a href="#_api_login_post_409_response"><code>_api_login_post_409_response</code> - </a></li>
+    <li><a href="#_api_login_post_500_response"><code>_api_login_post_500_response</code> - </a></li>
+    <li><a href="#_api_user__id__delete_200_response"><code>_api_user__id__delete_200_response</code> - </a></li>
+    <li><a href="#_api_user__id__put_404_response"><code>_api_user__id__put_404_response</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="AuthData"><code>AuthData</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">token (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">username (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Conversation"><code>Conversation</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The name of the conversation </div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the conversation </div>
+<div class="param">creation_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+<div class="param">edition_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ConversationData"><code>ConversationData</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The name of the conversation </div>
+<div class="param">users_id </div><div class="param-desc"><span class="param-type"><a href="#integer">array[Integer]</a></span> The ID of the user who is in the conversation </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ConversationDataPut"><code>ConversationDataPut</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">name </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The name of the conversation </div>
+<div class="param">removed_users </div><div class="param-desc"><span class="param-type"><a href="#integer">array[Integer]</a></span> The ID of the user who will be removed from the conversation </div>
+<div class="param">added_users </div><div class="param-desc"><span class="param-type"><a href="#integer">array[Integer]</a></span> The ID of the user who will be added in the conversation </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Message"><code>Message</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">conversation_id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the conversation to which the message belongs </div>
+<div class="param">user_id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the user who sent the message </div>
+<div class="param">content </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The content of the message </div>
+<div class="param">creation_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+<div class="param">edition_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="MessageData"><code>MessageData</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">conversation_id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the conversation to which the message belongs </div>
+<div class="param">user_id </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span> The ID of the user who sent the message </div>
+<div class="param">content </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The content of the message </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="User"><code>User</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">username (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">permission (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+<div class="param">last_connection (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+<div class="param">creation_date (optional)</div><div class="param-desc"><span class="param-type"><a href="#">Object</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UserData"><code>UserData</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">username </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UserUpdate"><code>UserUpdate</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">username (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">permission (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_login_post_400_response"><code>_api_login_post_400_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">error (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_login_post_401_response"><code>_api_login_post_401_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">error (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_login_post_409_response"><code>_api_login_post_409_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">error (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_login_post_500_response"><code>_api_login_post_500_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">error (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_user__id__delete_200_response"><code>_api_user__id__delete_200_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">success (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span>  </div>
+<div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="_api_user__id__put_404_response"><code>_api_user__id__put_404_response</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">status (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+<div class="param">error (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>

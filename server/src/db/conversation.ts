@@ -49,6 +49,8 @@ class Conversation extends Model<ConversationAttributes> {
         else throw new Error("Admin not found");
     }
 
+    // POST / PUT
+
     // Add user to the conversation
     async add_user(user_id : number) : Promise<void> {
         let conversation_user : ConversationUser | null = await ConversationUser.findOne({ where: { user_id : user_id, conversation_id : this.dataValues.id } });
@@ -57,6 +59,15 @@ class Conversation extends Model<ConversationAttributes> {
             await conversation_user.save();
         }
     }
+
+    // Add message to conversation
+    async add_message(user_id : number, content : string) : Promise<Message> {
+        const message : Message = await Message.create({ user_id : user_id, conversation_id : this.dataValues.id, content : content, id : null, creation_date : new Date(), edition_date : new Date() });
+        await message.save();
+        return message;
+    }
+
+    // DELETE
 
     // Remove user from the conversation
     async remove_user(user_id : number) : Promise<void> {

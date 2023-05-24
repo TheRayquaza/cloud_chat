@@ -40,7 +40,7 @@ export const new_conversation = async (req: Request, res: Response): Promise<voi
                     await conversation.add_user(users_id[i]);
                 await conversation.add_user(admin_id);
                 await conversation.save();
-                send_result(res, 200, conversation);
+                send_result(res, 201, conversation);
             }
         } catch (err) {
             controller_logger.error(err);
@@ -119,5 +119,51 @@ export const modify_conversation = async (req: Request, res: Response): Promise<
             controller_logger.error(err);
             send_error(res, 500, "Server error");
         }
+    }
+}
+
+// GET /api/conversation/{id}/message
+export const get_conversation_messages = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    controller_logger.info("get conversation " + id + " messages");
+
+    try {
+        const conversation: Conversation | null = await Conversation.findByPk(id);
+        if (!conversation)
+            send_error(res, 404, "Conversation not found");
+        else {
+            const messages = await conversation.get_messages();
+            send_result(res, 200, messages);
+        }
+    } catch (err) {
+        controller_logger.error(err);
+        send_error(res, 500, "Server error");
+    }
+}
+
+// GET /api/conversation/{id}/user
+export const get_conversation_users = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    controller_logger.info("get conversation " + id + " users");
+
+    try {
+        const conversation: Conversation | null = await Conversation.findByPk(id);
+        if (!conversation)
+            send_error(res, 404, "Conversation not found");
+        else {
+            const users = await conversation.get_users();
+            const users_filtered = users.map((user: User) => {
+                return {
+                    username: user.dataValues.username,
+                    permission: user.dataValues.permission,
+                    last_connection: user.dataValues.last_connection,
+                    creation_date: user.dataValues.creation_date
+                }
+            });
+            send_result(res, 200, users_filtered);
+        }
+    } catch (err) {
+        controller_logger.error(err);
+        send_error(res, 500, "Server error");
     }
 }

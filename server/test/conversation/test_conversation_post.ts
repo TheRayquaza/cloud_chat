@@ -29,16 +29,16 @@ describe('POST /api/conversation/', () => {
         await User.destroy({ where : { } });
     });
 
-    it('200 : create a new conversation and add users', async () => {
+    it('201 : create a new conversation and add users', async () => {
         init.body = JSON.stringify({ name : "default", users_id : user_list.map(user  => user.dataValues.id as number).concat(user?.dataValues.id as number)})
         response = await fetch(url, init);
         json = await response.json();
 
-        expect(response.status).toEqual(200);
+        expect(response.status).toEqual(201);
         expect(json).toEqual({
-            id: expect.any(Number),
+            id : expect.any(Number),
+            admin_id : user?.dataValues.id,
             name: expect.any(String),
-            admin_id: expect.any(Number),
             creation_date: expect.any(String),
             edition_date: expect.any(String),
         });

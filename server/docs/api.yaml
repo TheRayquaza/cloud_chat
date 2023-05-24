@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Loqui Express API with Swagger
   version: 0.1.0
-  description: This is a simple CRUD API application made with Express and documented with Swagger
+  description: Simple CRUD API application made with Express and documented with Swagger
   license:
     name: GPL V3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -410,7 +410,7 @@ paths:
       description: Create a new user with a unique username and a strong password
       parameters:
         - name: user
-          in: body
+          in: header
           description: The user object to create
           required: true
           schema:
@@ -440,11 +440,7 @@ paths:
         - $ref: '#/components/parameters/id'
       responses:
         200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Message'
+          $ref: '#/components/responses/Success'
         400:
           $ref: '#/components/responses/BadRequestError'
         404:
@@ -495,22 +491,6 @@ paths:
         500:
           $ref: '#/components/responses/ServerError'
   /api/message:
-    get:
-      summary: Get a message by ID
-      description: Get a message by ID
-      tags:
-        - Message
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        200:
-          $ref: "#/components/schemas/Message"
-        400:
-          $ref: "#/components/responses/BadRequestError"
-        404:
-          $ref: "#/components/responses/NotFoundError"
-        500:
-          $ref: "#/components/responses/ServerError"
     post:
       tags:
         - Message

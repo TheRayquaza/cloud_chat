@@ -10,7 +10,7 @@ const { send_error, send_result, send_success } = require("../scripts/send");
 // required body : content, user_id, conversation_id
 export const new_message = async (req: Request, res: Response) : Promise<void> => {
     controller_logger.info("New message");
-    let conversation : Conversation | null, user : User | null, message : Message | null, conversation_user : ConversationUser | null;
+    let conversation : Conversation | null, user : User | null, conversation_user : ConversationUser | null;
     const { conversation_id, user_id, content } = req.body;
 
     if (!conversation_id || !user_id || !content)
@@ -26,13 +26,11 @@ export const new_message = async (req: Request, res: Response) : Promise<void> =
                 if (!conversation_user)
                     send_error(res, 404, "User not in conversation");
                 else {
-                    message = await Message.create({id: null, content: content, edition_date: new Date(), creation_date: new Date(), user_id: user.dataValues.id, conversation_id: conversation.dataValues.id,});
-                    await message.save();
+                    const message = await conversation.add_message(user_id, content);
                     send_result(res, 201, message);
                 }
             }
-        }
-        catch (err) {
+        } catch (err) {
             controller_logger.error(err);
             send_error(res, 500, "Server error");
         }
@@ -41,17 +39,16 @@ export const new_message = async (req: Request, res: Response) : Promise<void> =
 
 // DELETE /api/message/{id}
 export const delete_message = async (req: Request, res: Response) : Promise<void> => {
-    const id = req.params.id;
-    controller_logger("Delete message");
+    controller_logger.info("Delete message");
     try {
-        const id: number = parseInt(req.params.id, 10);
+        const id = req.params.id
         controller_logger.info("delete message " + id);
         const nb: number = await Message.destroy({where: {id: id}})
 
         if (nb === 0)
             send_error(res, 404, "Message not found");
         else
-            send_success(res, 204);
+            send_success(res, 200);
     } catch (err) {
         controller_logger.error(err);
         send_error(res, 500, "Server error");
@@ -60,63 +57,43 @@ export const delete_message = async (req: Request, res: Response) : Promise<void
 
 // GET /api/message/{id}
 export const get_message = async (req: Request, res: Response) : Promise<void> => {
-    controller_logger("Get Message")
-    if (req.params.id)
-        send_error(res, 400, "Missing parameters")
-    else {
-        try {
-            const id = parseInt(req.params.id, 10);
-            let message : Message | null;
-            controller_logger.info("get message " + id);
-
-            message = await Message.findByPk(id);
-            if (!message)
-                send_error(res, 404, "Message not found");
-            else
-                send_result(res, 200, message);
-        } catch (err) {
-            controller_logger.error(err);
-            send_error(res, 500, "Server error");
-        }
-    }
-};
-
-// GET /api/message
-export const get_all_message = async (req: Request, res: Response) : Promise<void> => {
-    controller_logger.info("Get messages");
+    controller_logger.info("Get Message")
+    const id = req.params.id;
     try {
-        const messages : Message[] = await Message.findAll();
-        send_result(res, 200, messages);
+        let message : Message | null;
+        controller_logger.info("get message " + id);
+
+        message = await Message.findByPk(id);
+        if (!message)
+            send_error(res, 404, "Message not found");
+        else
+            send_result(res, 200, message);
     } catch (err) {
         controller_logger.error(err);
         send_error(res, 500, "Server error");
     }
-}
+};
 
 // PUT /api/message/{id}
 // required body : content
 export const modify_message = async (req: Request, res: Response) : Promise<void> => {
     controller_logger.info("Modify message");
-    if (!req.params.id)
-        send_error(res, 400, "Missing parameters");
-    else {
-        try {
-            const id: number = parseInt(req.params.id, 10);
-            controller_logger.info("modifying message " + id);
+    try {
+        const id = req.params.id;
+        controller_logger.info("modifying message " + id);
 
-            const { content } = req.body;
-            let message : Message | null = await Message.findByPk(id);
-            if (!message)
-                send_error(res, 404, "Message not found");
-            else {
-                message.setDataValue("content",content);
-                message.setDataValue("edition_date", new Date());
-                await message.save();
-                send_result(res, 200, message);
-            }
-        } catch (err) {
-            controller_logger.error(err);
-            send_error(res, 500, "Server error");
+        const { content } = req.body;
+        let message : Message | null = await Message.findByPk(id);
+        if (!message)
+            send_error(res, 404, "Message not found");
+        else {
+            message.setDataValue("content",content);
+            message.setDataValue("edition_date", new Date());
+            await message.save();
+            send_result(res, 200, message);
         }
+    } catch (err) {
+        controller_logger.error(err);
+        send_error(res, 500, "Server error");
     }
 };
