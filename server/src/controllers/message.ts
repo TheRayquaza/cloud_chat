@@ -11,9 +11,10 @@ const { send_error, send_result, send_success } = require("../scripts/send");
 export const new_message = async (req: Request, res: Response) : Promise<void> => {
     controller_logger.info("New message");
     let conversation : Conversation | null, user : User | null, conversation_user : ConversationUser | null;
-    const { conversation_id, user_id, content } = req.body;
+    const { conversation_id, content } = req.body;
+    const user_id = req.headers["X-id"] as string;
 
-    if (!conversation_id || !user_id || !content)
+    if (!conversation_id || !content)
         send_error(res, 400, "Missing parameters");
     else {
         try {
@@ -26,7 +27,8 @@ export const new_message = async (req: Request, res: Response) : Promise<void> =
                 if (!conversation_user)
                     send_error(res, 404, "User not in conversation");
                 else {
-                    const message = await conversation.add_message(user_id, content);
+                    let user_id_number : number = parseInt(user_id, 10);
+                    const message = await conversation.add_message(user_id_number, content);
                     send_result(res, 201, message);
                 }
             }
@@ -61,7 +63,6 @@ export const get_message = async (req: Request, res: Response) : Promise<void> =
     const id = req.params.id;
     try {
         let message : Message | null;
-        controller_logger.info("get message " + id);
 
         message = await Message.findByPk(id);
         if (!message)

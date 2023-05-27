@@ -52,6 +52,7 @@ export const new_conversation = async (req: Request, res: Response): Promise<voi
 // DELETE /api/conversation/{id}
 export const delete_conversation = async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
+    const user_id = parseInt(req.headers["X-id"] as string);
     controller_logger.info("delete conversation " + id);
 
     try {
@@ -59,6 +60,8 @@ export const delete_conversation = async (req: Request, res: Response): Promise<
         const conversation: Conversation | null = await Conversation.findByPk(id);
         if (!conversation)
             send_error(res, 404, "Conversation not found");
+        else if (conversation.dataValues.admin_id != user_id)
+            send_error(res, 401, "Unauthorized");
         else {
             await conversation.delete();
             send_success(res);
@@ -69,13 +72,34 @@ export const delete_conversation = async (req: Request, res: Response): Promise<
     }
 };
 
+// DELETE /api/conversation/{id}/leave
+export const leave_conversation = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const user_id : number = parseInt(req.headers["X-id"] as string);
+    controller_logger.info("user " + user_id + " leaves conversation " + id);
+
+    try {
+        // Find the conversation
+        const conversation: Conversation | null = await Conversation.findByPk(id);
+        if (!conversation)
+            send_error(res, 404, "Conversation not found");
+        else {
+            await conversation.remove_user(user_id);
+            send_success(res);
+        }
+    } catch (err) {
+        controller_logger.error(err);
+        send_error(res, 500, "Server error");
+    }
+}
+
 // GET /api/conversation/{id}
 export const get_conversation = async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     controller_logger.info("get conversation " + id);
 
     try {
-        const conversation: Conversation | null = await Conversation.findByPk(id, { attributes : {exclude : ["admin_id", "id"] } });
+        const conversation: Conversation | null = await Conversation.findByPk(id);
         if (!conversation)
             send_error(res, 404, "Conversation not found");
         else {

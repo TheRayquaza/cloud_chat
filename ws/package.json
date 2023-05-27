@@ -1,0 +1,36 @@
+{
+  "name": "ws",
+  "version": "1.0.0",
+  "description": "Websocket server",
+  "main": "src/ws.ts",
+  "scripts": {
+    "test": "jest --detectOpenHandles",
+    "build": "npx tsc",
+    "start": "clear && node dist/ws.js",
+    "dev": "clear && npx tsc-watch --onSuccess \"node ./dist/ws.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheRayquaza/loqui_chat.git"
+  },
+  "keywords": [
+    "WS",
+    "websocket"
+  ],
+  "author": "Mateo Lelong",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/TheRayquaza/loqui_chat/issues"
+  },
+  "homepage": "https://github.com/TheRayquaza/loqui_chat#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "es6-map": "^0.1.5",
+    "winston": "^3.8.2",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/winston": "^2.4.4",
+    "@types/ws": "^8.5.4"
+  }
+}

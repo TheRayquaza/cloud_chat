@@ -7,9 +7,11 @@ import {
     modify_conversation,
     delete_conversation,
     get_conversation_messages,
-    get_conversation_users
+    get_conversation_users,
+    leave_conversation
 } from "../controllers/conversation";
 
+router.delete("/:id/leave", leave_conversation);
 
 router.get("/:id/message", get_conversation_messages);
 router.get("/:id/user", get_conversation_users);

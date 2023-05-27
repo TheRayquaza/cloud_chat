@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 dotenv.config({path: '.env'});
 
 import apiRouter from './routers/api';
-import wssHandler from './ws/ws';
 import sequelize from './db/client';
 
 import middleware_log_entry from './middlewares/log_entry';
@@ -24,9 +23,7 @@ sequelize.sync({ force : process.env.FORCE_RELOAD_DB === 'true' })
 .then(() => console.log('-> Tables created!'))
 .catch(err => console.error('-> Error creating tables:', err));
 
-// Enable websockets
-const expressWs = require('express-ws')(express());
-const app = expressWs.app;
+const app = express();
 
 // Logs
 app.use(middleware_log_exit);
@@ -37,9 +34,6 @@ app.use(morgan('[info] [morgan]: :method :url :status :res[content-length]B - :r
 
 // Router for api
 app.use('/api', apiRouter);
-
-// Router for ws
-app.ws('/ws', wssHandler);
 
 // Default routes
 app.get('/', (req : Request, res : Response) => res.sendFile('/index.html'));

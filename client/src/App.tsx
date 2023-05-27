@@ -1,56 +1,42 @@
-import {useEffect, useMemo, useState} from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
-import CssBaseline from '@mui/material/CssBaseline';
 
-import About from "./About.tsx";
-import Home from "./Home.tsx";
-import Chat from "./Chat.tsx";
-import Login from "./Login.tsx";
-import Register from "./Register.tsx";
-import Logout from "./Logout.tsx";
-import Header from "./components/Header.tsx";
-import Footer from "./components/Footer.tsx";
-import Default from "./Default.tsx";
+import About from './components/About';
+import Home from './components/Home';
+import Chat from './components/Chat';
+import Login from './components/Login';
+import Register from './components/Register';
+import Logout from './components/Logout';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Default from './components/Default';
 
-function App() {
-    const [isDarkMode, setIsDarkMode] = useState(true);
+import GlobalProvider from './contexts/GlobalContext';
 
-    const theme = useMemo(
-        () => createTheme({ palette: { mode: isDarkMode ? 'dark' : 'light' } }),
-        [isDarkMode]
-    );
-
-    const toggleDarkMode = () => {
-        setIsDarkMode((prev) => !prev);
-    };
-
-    useEffect(() => {
-        document.title = 'Loqui Chat';
-    }, []);
+const App = () => {
+    const [logoutOpen, setLogoutOpen] = useState(false);
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <BrowserRouter>
-                <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-                <ToastContainer/>
+        <BrowserRouter>
+            <GlobalProvider>
+                <Header setLogoutOpen={setLogoutOpen} logoutOpen={logoutOpen} />
+                <ToastContainer limit={5} pauseOnHover={false} autoClose={1500}/>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/logout" element={<Logout/>} />
-                    <Route path="*" element={<Default/>} />
+                    <Route path="/logout" element={<Logout open={logoutOpen} setOpen={setLogoutOpen} />} />
+                    <Route path="*" element={<Default />} />
                 </Routes>
-                <Footer/>
-            </BrowserRouter>
-        </ThemeProvider>
+                <Footer />
+            </GlobalProvider>
+        </BrowserRouter>
     );
 }
-
 
 export default App;

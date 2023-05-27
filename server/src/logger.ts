@@ -33,17 +33,6 @@ export const controller_logger : winston.Logger = winston.createLogger({
   transports: [console_transport, file_transport]
 })
 
-// Create a logger for DB with red colorized output
-export const ws_logger : winston.Logger = winston.createLogger({
-    level: process.env.LOG !== 'true' ? 'error' : 'info',
-    format: winston.format.combine(
-      winston.format.colorize({all:true, colors:{info:'blue'}}),
-      winston.format.timestamp(),
-      make_console_format('ws')
-    ),
-    transports: [console_transport, file_transport]
-})
-
 // Create a logger for routes with colorized output
 export const middleware_logger : winston.Logger = winston.createLogger({
     level: process.env.LOG !== 'true' ? 'error' : 'info',

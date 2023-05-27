@@ -152,6 +152,8 @@ describe('GET /api/conversation', () => {
 
                 expect(response.status).toEqual(200);
                 expect(json).toEqual({
+                    id: conversation.dataValues.id,
+                    admin_id: user.dataValues.id,
                     name: "TEST_CONVERSATION",
                     creation_date: conversation.dataValues.creation_date.toISOString(),
                     edition_date: conversation.dataValues.edition_date.toISOString(),
