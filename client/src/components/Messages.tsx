@@ -1,19 +1,26 @@
-import { Box } from "@chakra-ui/react";
+import { Dispatch, SetStateAction } from "react";
+import {List, ListItem} from "@chakra-ui/react";
+
 import Message from "./Message";
 
+import message from "../types/message";
+
 type MessageProps = {
-    messages: Array<any>
+    messages: message[],
+    setMessages : Dispatch<SetStateAction<message[]>>;
 };
 
 const Messages = (props : MessageProps) => {
-    const { messages } = props;
+    const { messages, setMessages } = props;
 
     return (
-        <Box flex={1} p="8px" overflowY="auto">
+        <List flex={1} p="8px" overflowY="auto">
             {messages.map(message => (
-                <Message message={message}/>
+                <ListItem key={message.id}>
+                    <Message message={message} setMessages={setMessages}/>
+                </ListItem>
             ))}
-        </Box>
+        </List>
     );
 };
 

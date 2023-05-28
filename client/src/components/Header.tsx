@@ -14,7 +14,7 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
-    const { loggedIn } = useContext(GlobalContext);
+    const { loggedIn, username } = useContext(GlobalContext);
     const { setLogoutOpen, logoutOpen } = props;
 
     return (
@@ -34,7 +34,7 @@ const Header = (props: HeaderProps) => {
                             Chat
                         </Button>
                         <Button  onClick={() => setLogoutOpen(true)}>
-                            Logout
+                            Logout {username}
                         </Button>
                     </>
                 ) : (

@@ -29,6 +29,7 @@ class Conversation extends Model<ConversationAttributes> {
 
     // Get all messages from this conversation
     async get_messages() : Promise<Message[]> {
+        console.log(this.dataValues);
         return await Message.findAll({ where: { conversation_id : this.dataValues.id } });
     }
 

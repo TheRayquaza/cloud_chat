@@ -1,18 +1,20 @@
 import {Dispatch, SetStateAction, useState} from "react";
 
-import { List, Box } from "@chakra-ui/react";
+import { List, ListItem, Box } from "@chakra-ui/react";
 
 import Conversation from "./Conversation.tsx";
 
 import DeleteConversationDialog from "./dialog/DeleteConversationDialog.tsx";
 import EditConversationDialog from "./dialog/EditConversationDialog.tsx";
 
+import conversation from "../types/conversation.ts";
+
 type ConversationsProps = {
-    conversations: Array<any>,
+    conversations: Array<conversation>,
     updateConversation: (id: number) => void,
-    currentConversation: any,
-    setConversations: Dispatch<SetStateAction<any>>,
-    setCurrentConversation : Dispatch<SetStateAction<any>>
+    currentConversation: conversation,
+    setConversations: Dispatch<SetStateAction<conversation[]>>,
+    setCurrentConversation : Dispatch<SetStateAction<conversation>>
 }
 
 const Conversations = (props : ConversationsProps) => {
@@ -21,8 +23,8 @@ const Conversations = (props : ConversationsProps) => {
     const [openConversationDeleteDialog, setOpenConversationDeleteDialog] = useState<boolean>(false);
     const [openConversationEditDialog, setOpenConversationEditDialog] = useState<boolean>(false);
 
-    const [conversationToEdit, setConversationToEdit] = useState<any>({ id : null});
-    const [conversationToDelete, setConversationToDelete] = useState<any>({ id : null});
+    const [conversationToEdit, setConversationToEdit] = useState<conversation>({ id : null, edition_date : new Date(), creation_date : new Date(), name : "", admin_id : null});
+    const [conversationToDelete, setConversationToDelete] = useState<conversation>({ id : null, edition_date : new Date(), creation_date : new Date(), name : "", admin_id : null});
 
     return (
         <Box>
@@ -45,17 +47,19 @@ const Conversations = (props : ConversationsProps) => {
             />
             <List flexDirection="row" flexGrow={1}>
                 {conversations.map((conversation) => (
-                    <Conversation
-                        conversation={conversation}
-                        updateConversation={updateConversation}
-                        currentConversation={currentConversation}
-                        setConversationToDelete={setConversationToDelete}
-                        setOpenConversationDeleteDialog={setOpenConversationDeleteDialog}
-                        setConversationToEdit={setConversationToEdit}
-                        setOpenConversationEditDialog={setOpenConversationEditDialog}
-                        setCurrentConversation={setCurrentConversation}
-                        setConversations={setConversations}
-                    />
+                    <ListItem key={conversation.id}>
+                        <Conversation
+                            conversation={conversation}
+                            updateConversation={updateConversation}
+                            currentConversation={currentConversation}
+                            setConversationToDelete={setConversationToDelete}
+                            setOpenConversationDeleteDialog={setOpenConversationDeleteDialog}
+                            setConversationToEdit={setConversationToEdit}
+                            setOpenConversationEditDialog={setOpenConversationEditDialog}
+                            setCurrentConversation={setCurrentConversation}
+                            setConversations={setConversations}
+                        />
+                    </ListItem>
                 ))}
             </List>
         </Box>

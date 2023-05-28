@@ -1,25 +1,31 @@
-import { useState, useContext } from "react";
+import {useState, useContext, Dispatch, SetStateAction} from "react";
 import { toast } from "react-toastify";
 
-import { Text, Box, IconButton, Editable, EditablePreview, EditableInput } from "@chakra-ui/react";
+import {
+    Text,
+    Box,
+    IconButton,
+    Editable,
+    EditablePreview,
+    EditableInput,
+} from "@chakra-ui/react";
 import { EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
 import { send_request } from "../scripts/request.ts";
-import {GlobalContext} from "../contexts/GlobalContext.tsx";
+import { GlobalContext } from "../contexts/GlobalContext.tsx";
+import message from "../types/message.ts";
 
 type MessageProps = {
-    message : any
-}
+    message: message;
+    setMessages: Dispatch<SetStateAction<message[]>>;
+};
 
-const Message = (props : MessageProps) => {
-    const { message } = props;
+const Message = (props: MessageProps) => {
+    const { message, setMessages } = props;
     const { token, id } = useContext(GlobalContext);
     const [isEditing, setIsEditing] = useState(false);
-    const [editedContent, setEditedContent] = useState(message.content);
+    const [editedContent, setEditedContent] = useState(message.content)
 
-    const handleEditClick = () => {
-        setIsEditing(true);
-    };
 
     const handleCancelClick = () => {
         setIsEditing(false);
@@ -27,8 +33,6 @@ const Message = (props : MessageProps) => {
     };
 
     const handleSaveClick = async () => {
-        // TODO: call ws
-
         const response = await send_request(
             `/api/message/${message.id}`,
             "PUT",
@@ -37,21 +41,41 @@ const Message = (props : MessageProps) => {
                 Authorization: `Bearer ${token}`,
             },
             {
-                content: editedContent
-            });
-        if (response.error) toast.error(response.error);
-        else setIsEditing(false);
+                content: editedContent,
+            }
+        );
+
+        if (response.error)
+            toast.error(response.error);
+        else {
+            setIsEditing(false);
+            message.content = editedContent;
+        }
     };
 
-    const handleChange = (event : any) => {
-        setEditedContent(event.target.value);
+    const handleDeleteClick = async () => {
+        const response = await send_request(
+            `/api/message/${message.id}`,
+            "DELETE",
+            {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        );
+
+        if (response.error)
+            toast.error(response.error);
+        else
+            setMessages((messages) =>
+                messages.filter((m) => m.id !== message.id)
+            );
     };
 
     return (
         <Box mb="1rem">
-            {isEditing && message.id == id ? (
+            {isEditing && message.user_id === id ? (
                 <Box display="flex" alignItems="center">
-                    <Editable value={editedContent} onChange={handleChange}>
+                    <Editable value={editedContent} onChange={(value) => setEditedContent(value)}>
                         <EditableInput />
                         <EditablePreview />
                     </Editable>
@@ -75,23 +99,27 @@ const Message = (props : MessageProps) => {
                     <Text variant="body1" flexGrow={1} mr="1rem">
                         {message.content}
                     </Text>
-                    <IconButton
-                        icon={<EditIcon />}
-                        variant="ghost"
-                        colorScheme="blue"
-                        onClick={handleEditClick}
-                        aria-label="Edit"
-                    />
-                    <IconButton
-                        aria-label={"Delete"}
-                        icon={<CloseIcon />}
-                        variant="ghost"
-                        colorScheme="red"
-
-                    />
+                    {message.user_id === id && (
+                        <>
+                            <IconButton
+                                icon={<EditIcon />}
+                                variant="ghost"
+                                colorScheme="blue"
+                                onClick={() => setIsEditing(true)}
+                                aria-label="Edit"
+                            />
+                            <IconButton
+                                icon={<CloseIcon />}
+                                variant="ghost"
+                                colorScheme="red"
+                                onClick={handleDeleteClick}
+                                aria-label="Delete"
+                            />
+                        </>
+                    )}
                 </Box>
             )}
-            <Text variant="body2">{message.edition_date}</Text>
+            <Text variant="body2">{message.edition_date.toISOString()}</Text>
         </Box>
     );
 };
