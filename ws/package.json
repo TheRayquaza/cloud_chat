@@ -26,6 +26,7 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "es6-map": "^0.1.5",
+    "typescript": "^5.0.4",
     "winston": "^3.8.2",
     "ws": "^8.13.0"
   },
