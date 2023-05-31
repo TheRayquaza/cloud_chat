@@ -45,7 +45,7 @@ const Conversation = ( props : ConversationProps) => {
     }
 
     const leaveConversation = async () => {
-        // TODO: call ws
+        //
 
         // API call
         const response = await send_request(

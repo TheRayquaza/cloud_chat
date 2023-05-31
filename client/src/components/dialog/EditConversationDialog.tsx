@@ -21,6 +21,7 @@ import {
 
 import { send_request } from "../../scripts/request.ts";
 import { GlobalContext } from "../../contexts/GlobalContext.tsx";
+import {send_ws} from "../../client_ws/ws.ts";
 
 type EditConversationModalProps = {
     open: boolean;
@@ -41,29 +42,30 @@ const EditConversationModal = (props: EditConversationModalProps) => {
         currentConversation,
     } = props;
     const { token, id } = useContext(GlobalContext);
+
     const [usersToAdd, setUsersToAdd] = useState<number[]>([id as number]);
     const [usersToRemove, setUsersToRemove] = useState<number[]>([]);
-
     const [users, setUsers] = useState<any[]>([]);
 
     useEffect(() => {
-        send_request(`/api/user`, "GET", {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        }).then((response: any) => {
+        send_request(
+            `/api/user`,
+            "GET",
+            {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            }
+        ).then((response: any) => {
             if (response.error) {
                 toast.error(response.error);
                 setUsers([]);
             } else {
                 setUsers(response);
-                // TODO: add user.belongsToConversation
             }
         });
     }, []);
 
     const handleSave = async () => {
-        // TODO call ws
-
         const response = await send_request(
             `/api/conversation/${conversationToEdit.id}`,
             "PUT",
@@ -82,13 +84,19 @@ const EditConversationModal = (props: EditConversationModalProps) => {
             toast.error(response.error);
         } else {
             toast.success("Conversation \"" + conversationToEdit.name + "\" edited successfully");
+            for (let i = 0; i < usersToAdd.length; i++)
+                if (usersToAdd[i] != id)
+                    send_ws(conversationToEdit, "conversation", "created", { id : usersToAdd[i], username : ""});
+            for (let i = 0; i < usersToRemove.length; i++)
+                if (usersToRemove[i] != id)
+                    send_ws(conversationToEdit, "conversation", "deleted", { id : usersToRemove[i], username : ""});
             setOpen(false);
             setConversationToEdit({ id: null });
             if (currentConversation.id === conversationToEdit.id) {
                 setConversationToEdit(response);
             }
-            setConversations((conversations: any[]) => {
-                return conversations.map((conversation: any) => {
+            setConversations((prev: any[]) => {
+                return prev.map((conversation: any) => {
                     return conversation.id === conversationToEdit.id ? conversationToEdit : conversation;
                 });
             });

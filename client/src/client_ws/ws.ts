@@ -1,40 +1,28 @@
-const ws = new WebSocket('ws://localhost:8081');
+import { user } from "../types/user.ts";
 
-ws.addEventListener('open', () => {
-    console.log('WebSocket connection opened');
+export const socket = new WebSocket('ws://localhost:8081');
 
-    // User joins the conversation
-    const joinMessage = {
-        type: 'join',
-        payload: {
-            conversationId: 'CONVERSATION_ID', // Replace with the actual conversation ID
-            username: 'John' // Replace with the actual username
-        }
-    };
-    ws.send(JSON.stringify(joinMessage));
-});
+socket.onopen = () => console.log('WebSocket connection established.');
+socket.onclose = () => console.log('WebSocket connection closed.');
+socket.onerror = (error) => console.error('WebSocket error:', error);
 
-ws.addEventListener('message', (message) => {
-    const data = JSON.parse(message.data);
-    const { type, payload } = data;
-
-    if (type === 'join') {
-        // Handle user joining the conversation
-        const { userId, username } = payload;
-        console.log(`User ${userId} (${username}) joined the conversation`);
-    } else if (type === 'message') {
-        // Handle incoming messages
-        const { userId, conversationId, content } = payload;
-        console.log(`Received message from user ${userId} in conversation ${conversationId}: ${content}`);
-    } else if (type === 'leave') {
-        // Handle user leaving the conversation
-        const { userId } = payload;
-        console.log(`User ${userId} left the conversation`);
-    }
-});
-
-ws.addEventListener('close', () => {
-    console.log('WebSocket connection closed');
-});
-
-export default ws;
+// Function to send a chat message to the server
+export const send_ws = (content : any, type : string, action : string = "default", user : user | null = null) => {
+    if (user)
+        socket.send(JSON.stringify( {
+            type: type,
+            content : JSON.stringify(content),
+            user : JSON.stringify(user),
+            action : action,
+            sender : "client",
+            recipient : "server",
+        }));
+    else
+        socket.send(JSON.stringify( {
+            type: type,
+            content : JSON.stringify(content),
+            action : action,
+            sender : "client",
+            recipient : "server",
+        }));
+};

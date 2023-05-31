@@ -11,23 +11,14 @@ import Conversations from "./Conversations";
 
 import { GlobalContext } from "../contexts/GlobalContext";
 import { send_request } from "../scripts/request";
+import { send_ws, socket } from "../client_ws/ws.ts";
 
 import conversation from "../types/conversation";
 import message from "../types/message";
-import {transformToConversations, transformToMessage, transformToMessages, transformToConversation } from "../scripts/transformers.ts";
 
 const Chat = () => {
     const navigate = useNavigate();
-
-    const { token, id, loggedIn } = useContext(GlobalContext);
-
-    useEffect(() => {
-        if (!token || !id || !loggedIn) navigate('/login');
-        else {
-            document.title = 'Chat';
-            loadConversation();
-        }
-    }, []);
+    const { token, id, loggedIn, username } = useContext(GlobalContext);
 
     const [currentConversation, setCurrentConversation] = useState<conversation>({ id: null, edition_date: new Date(), creation_date: new Date(), name: "" , admin_id: -1});
 
@@ -38,8 +29,55 @@ const Chat = () => {
     const [openConversationCreateDialog, setOpenConversationCreateDialog] = useState(false);
 
     useEffect(() => {
+        if (!token || !id || !loggedIn)
+            navigate("/login");
+        else if (socket.readyState != socket.OPEN) {
+            window.location.assign("/login");
+        } else {
+            document.title = "Chat";
+            loadConversation();
+
+            send_ws({ id : id, username : username }, "auth");
+
+            socket.onmessage = (event : MessageEvent) => {
+                const data = JSON.parse(event.data);
+                if (data.type === "message") {
+                    const message = data.content;
+                    if (data.action === "created") {
+                        setMessages(prev => {
+                            return [...prev, message]
+                        })
+                    } else if (data.action === "deleted") {
+                        setMessages(prev => {
+                            return prev.filter(m => m.id !== message.id);
+                        })
+                    } else if (data.action === "updated") {
+                        setMessages(prev => {
+                            return prev.map(m => m.id === message.id ? message : m);
+                        })
+                    }
+                } else if (data.type === "conversation") {
+                    const conversation = data.content;
+                    console.log(conversation);
+                    if (data.action === "created") {
+                        setConversations(prev => {
+                            return [...prev, conversation]
+                        })
+                    } else if (data.action === "deleted") {
+                        setConversations(prev => {
+                            return prev.filter(m => m.id !== conversation.id);
+                        })
+                    } else if (data.action === "updated")
+                        setConversations(prev => {
+                            return prev.map(m => m.id === conversation.id ? conversation : m);
+                        });
+                }
+            };
+        }
+    }, []);
+
+    useEffect(() => {
         loadMessage(currentConversation.id as number);
-        console.log("Reload message");
     }, [currentConversation]);
 
     const loadConversation = async (): Promise<void> => {
@@ -56,12 +94,11 @@ const Chat = () => {
         if (response.error)
             toast.error(response.error);
         else
-            setConversations(transformToConversations(response));
+            setConversations(response);
     }
 
     const sendMessage = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        // TODO call ws
 
         if (!currentConversation.id)
             toast.error("No conversation selected");
@@ -84,7 +121,8 @@ const Chat = () => {
             if (response.error)
                 toast.error(response.error);
             else {
-                setMessages([...messages, transformToMessage(response)]);
+                setMessages([...messages, response]);
+                send_ws(response, "message", "created", { id : id as number, username : username });
                 setInput("");
             }
         }
@@ -105,7 +143,7 @@ const Chat = () => {
             if (response.error)
                 toast.error(response.error);
             else
-                setMessages(transformToMessages(response));
+                setMessages(response);
         } else
             setMessages([]);
     };
@@ -127,9 +165,10 @@ const Chat = () => {
                 await loadConversation();
             }
             else {
-                setCurrentConversation(transformToConversation(response));
+                setCurrentConversation(response);
                 if (conversations.every(c => c.id !== response.id))
-                    setConversations([...conversations, response])
+                    setConversations([...conversations, response]);
+                send_ws(response, "conversation", "updated", { id : id as number, username : username });
             }
         } else if (!conversation_id) {
             setCurrentConversation({ id: null, edition_date : new Date(), creation_date: new Date(), name: "", admin_id: -1 });

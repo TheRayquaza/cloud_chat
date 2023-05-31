@@ -2,6 +2,7 @@ import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, Moda
 import { Dispatch, SetStateAction, useContext } from "react";
 import { GlobalContext } from "../contexts/GlobalContext";
 import {useNavigate} from "react-router";
+import {send_ws} from "../client_ws/ws.ts";
 
 type LogoutProps = {
     open: boolean,
@@ -10,7 +11,7 @@ type LogoutProps = {
 
 const Logout = (props: LogoutProps) => {
     const navigate = useNavigate();
-    const { setLoggedIn } = useContext(GlobalContext);
+    const { setLoggedIn, username, id } = useContext(GlobalContext);
     const { open, setOpen } = props;
 
     const handleNo = () => { setOpen(false) };
@@ -18,6 +19,8 @@ const Logout = (props: LogoutProps) => {
         setOpen(false);
         setLoggedIn(false);
         navigate("/login");
+
+        send_ws({}, "logout", "default", { username : username, id : id as number})
     }
 
     const handleClose = () => { setOpen(false); }

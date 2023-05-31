@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import {List, ListItem} from "@chakra-ui/react";
+import {Dispatch, SetStateAction } from "react";
+import { List, ListItem } from "@chakra-ui/react";
 
 import Message from "./Message";
 

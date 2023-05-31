@@ -1,14 +1,19 @@
+import { createLogger, format, transports, Logger } from 'winston';
 import winston from 'winston'
 
 // Create a console transport for simple info on stdout
-const console_transport : winston.transports.ConsoleTransportInstance = new winston.transports.Console();
+const consoleTransport: transports.ConsoleTransportInstance = new transports.Console();
 
 // Create a logger for DB with red colorized output
-export const logger : winston.Logger = winston.createLogger({
-    level: process.env.LOG !== 'true' ? 'error' : 'info',
-    format: winston.format.combine(
-        winston.format.colorize({all:true, colors:{info:'blue'}}),
-        winston.format.timestamp()
+const logger: Logger = createLogger({
+    format: format.combine(
+        format.colorize({ all: true, colors: { info: 'blue' } }),
+        format.timestamp(),
+        format.printf((info : winston.Logform.TransformableInfo) => {
+            return `[${info.level}] [ws]: ${info.message}`;
+        })
     ),
-    transports: [console_transport]
+    transports: [consoleTransport],
 });
+
+export default logger;

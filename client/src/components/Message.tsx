@@ -14,6 +14,7 @@ import { EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { send_request } from "../scripts/request.ts";
 import { GlobalContext } from "../contexts/GlobalContext.tsx";
 import message from "../types/message.ts";
+import {send_ws} from "../client_ws/ws.ts";
 
 type MessageProps = {
     message: message;
@@ -22,10 +23,10 @@ type MessageProps = {
 
 const Message = (props: MessageProps) => {
     const { message, setMessages } = props;
-    const { token, id } = useContext(GlobalContext);
+    const { token, id, username } = useContext(GlobalContext);
+
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(message.content)
-
 
     const handleCancelClick = () => {
         setIsEditing(false);
@@ -50,6 +51,7 @@ const Message = (props: MessageProps) => {
         else {
             setIsEditing(false);
             message.content = editedContent;
+            send_ws(response, "message", "updated",  { id : id as number, username : username });
         }
     };
 
@@ -65,10 +67,10 @@ const Message = (props: MessageProps) => {
 
         if (response.error)
             toast.error(response.error);
-        else
-            setMessages((messages) =>
-                messages.filter((m) => m.id !== message.id)
-            );
+        else {
+            send_ws(message, "message", "deleted",  { id : id as number, username : username });
+            setMessages((messages) => messages.filter((m) => m.id !== message.id));
+        }
     };
 
     return (
@@ -119,7 +121,7 @@ const Message = (props: MessageProps) => {
                     )}
                 </Box>
             )}
-            <Text variant="body2">{message.edition_date.toISOString()}</Text>
+            <Text variant="body2">{message.edition_date}</Text>
         </Box>
     );
 };
