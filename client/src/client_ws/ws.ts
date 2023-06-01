@@ -1,6 +1,6 @@
 import { user } from "../types/user.ts";
 
-export const socket = new WebSocket('ws://localhost:8081');
+export const socket = new WebSocket('ws://loqui-chat.xyz/socket.io');
 
 socket.onopen = () => console.log('WebSocket connection established.');
 socket.onclose = () => console.log('WebSocket connection closed.');

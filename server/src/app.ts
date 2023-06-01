@@ -35,8 +35,6 @@ app.use(morgan('[info] [morgan]: :method :url :status :res[content-length]B - :r
 // Router for api
 app.use('/api', apiRouter);
 
-// Default routes
-app.get('/', (req : Request, res : Response) => res.sendFile('/index.html'));
 app.get('*', (req : Request, res : Response) => send_error(res, 404, 'Not found'));
 app.put('*', (req : Request, res : Response) => send_error(res, 405, 'Not allowed'));
 app.post('*', (req : Request, res : Response) => send_error(res, 405, 'Not allowed'));

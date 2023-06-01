@@ -1,4 +1,4 @@
-const url : string = "http://localhost:8080"
+const url : string = "https://loqui-chat.xyz/api/";
 
 export const send_request = async (endpoint : string, method: string, headers : RequestInit["headers"] = {}, body : any = null) : Promise<any> => {
     if (!body) {
