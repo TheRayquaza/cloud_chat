@@ -11,7 +11,20 @@ import logger from "./logger";
 
 dotenv.config();
 
-const wss = new WebSocket.Server({ port: parseInt(process.env.PORT as string, 10), host : process.env.HOST });
+const https = require('https');
+const fs = require('fs');
+
+const server = https.createServer({
+    cert : fs.readFileSync(process.env.CERT as string),
+    key : fs.readFileSync(process.env.KEY as string),
+});
+
+const wss = new WebSocket.Server({
+    port: parseInt(process.env.PORT as string, 10),
+    host : process.env.HOST,
+    server : server
+});
+
 const record : Array<record> = []; // list of all users, conversations and messages
 const clients : WebSocket.WebSocket[] = []
 
