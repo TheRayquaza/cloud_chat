@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "1. Updating packages"
 sudo apt -y update
 sudo apt -y full-upgrade

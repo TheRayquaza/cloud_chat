@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "build": "npx tsc",
-    "start": "clear && node dist/app.js",
+    "start": "node dist/app.js",
     "dev": "clear && npx tsc-watch --onSuccess \"node ./dist/app.js\""
   },
   "repository": {
