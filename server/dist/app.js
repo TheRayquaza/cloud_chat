@@ -29,8 +29,6 @@ app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('[info] [morgan]: :method :url :status :res[content-length]B - :response-time ms'));
 // Router for api
 app.use('/api', api_1.default);
-// Default routes
-app.get('/', (req, res) => res.sendFile('/index.html'));
 app.get('*', (req, res) => (0, send_1.send_error)(res, 404, 'Not found'));
 app.put('*', (req, res) => (0, send_1.send_error)(res, 405, 'Not allowed'));
 app.post('*', (req, res) => (0, send_1.send_error)(res, 405, 'Not allowed'));

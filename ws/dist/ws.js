@@ -11,7 +11,17 @@ const query_1 = require("./types/query");
 const dotenv_1 = __importDefault(require("dotenv"));
 const logger_1 = __importDefault(require("./logger"));
 dotenv_1.default.config();
-const wss = new ws_1.default.Server({ port: parseInt(process.env.PORT, 10), host: process.env.HOST });
+const https = require('https');
+const fs = require('fs');
+const server = https.createServer({
+    cert: fs.readFileSync(process.env.CERT),
+    key: fs.readFileSync(process.env.KEY),
+});
+const wss = new ws_1.default.Server({
+    port: parseInt(process.env.PORT, 10),
+    host: process.env.HOST,
+    server: server
+});
 const record = []; // list of all users, conversations and messages
 const clients = [];
 console.log(`-> WebSocket server listening on ${process.env.HOST}:${process.env.PORT}.`);
