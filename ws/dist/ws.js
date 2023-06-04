@@ -11,16 +11,24 @@ const query_1 = require("./types/query");
 const dotenv_1 = __importDefault(require("dotenv"));
 const logger_1 = __importDefault(require("./logger"));
 dotenv_1.default.config();
-const https = require('https');
-const fs = require('fs');
-const server = https.createServer({
-    cert: fs.readFileSync(process.env.CERT),
-    key: fs.readFileSync(process.env.KEY),
-});
-const wss = new ws_1.default.Server({
-    port: parseInt(process.env.PORT, 10),
-    host: process.env.HOST,
-    server: server
+const fs_1 = __importDefault(require("fs"));
+const https_1 = __importDefault(require("https"));
+const certPath = process.env.CERT;
+const keyPath = process.env.KEY;
+// Check if the required environment variables are defined
+if (!certPath || !keyPath) {
+    console.error('Missing or invalid environment variables.');
+    process.exit(1);
+}
+// Read the certificate and key files
+const cert = fs_1.default.readFileSync(certPath);
+const key = fs_1.default.readFileSync(keyPath);
+// Create an HTTPS server
+const server = https_1.default.createServer({ cert, key });
+const wss = new ws_1.default.Server({ server });
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+    // Handle WebSocket connection logic here
 });
 const record = []; // list of all users, conversations and messages
 const clients = [];
@@ -172,5 +180,12 @@ wss.on('connection', (ws) => {
     });
     ws.on('close', () => console.log('WebSocket connection closed.'));
     ws.on('error', (error) => console.error('WebSocket error:', error));
+});
+// Specify the port and host to listen on
+const port = process.env.PORT || 8080;
+const host = process.env.HOST || 'localhost';
+// Start the server listening for incoming connections
+server.listen(port, host, () => {
+    console.log(`WebSocket server is running on ${host}:${port}`);
 });
 //# sourceMappingURL=ws.js.map

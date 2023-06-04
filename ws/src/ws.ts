@@ -1,4 +1,6 @@
 import WebSocket from 'ws';
+import fs from 'fs';
+import https from 'https';
 
 import { message, transform_message } from "./types/message";
 import { conversation, transform_conversation } from "./types/conversation";
@@ -10,10 +12,6 @@ import dotenv from 'dotenv';
 import logger from "./logger";
 
 dotenv.config();
-
-import fs from 'fs';
-import https from 'https';
-import WebSocket from 'ws';
 
 const certPath = process.env.CERT;
 const keyPath = process.env.KEY;
@@ -204,11 +202,8 @@ wss.on('connection', (ws : WebSocket.WebSocket) => {
 
 // Specify the port and host to listen on
 const port = process.env.PORT || 8080;
-const host = process.env.HOST || 'localhost';
 
 // Start the server listening for incoming connections
-server.listen(port, host, () => {
-  console.log(`WebSocket server is running on ${host}:${port}`);
+server.listen(port,() => {
+  console.log(`WebSocket server is running on localhost:${port}`);
 });
-
-
