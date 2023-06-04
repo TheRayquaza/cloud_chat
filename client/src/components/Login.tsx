@@ -31,6 +31,9 @@ const Login = () => {
             setUsername(username);
             setLoggedIn(true);
             setToken(response.token);
+            localStorage.setItem("id", response.id);
+            localStorage.setItem("username", username);
+            localStorage.setItem("token", response.token);
             navigate("/chat");
         }
     };

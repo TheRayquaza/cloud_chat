@@ -18,7 +18,7 @@ import message from "../types/message";
 
 const Chat = () => {
     const navigate = useNavigate();
-    const { token, id, loggedIn, username } = useContext(GlobalContext);
+    const { token, id, loggedIn, username, setToken, setUsername, setLoggedIn, setId } = useContext(GlobalContext);
 
     const [currentConversation, setCurrentConversation] = useState<conversation>({ id: null, edition_date: new Date(), creation_date: new Date(), name: "" , admin_id: -1});
 
@@ -29,10 +29,14 @@ const Chat = () => {
     const [openConversationCreateDialog, setOpenConversationCreateDialog] = useState(false);
 
     useEffect(() => {
-        if (!token || !id || !loggedIn)
-            navigate("/login");
-        else if (socket.readyState != socket.OPEN) {
-            window.location.assign("/login");
+        if (!token || !id || !loggedIn) {
+            if (localStorage.getItem("token") && localStorage.getItem("id") && localStorage.getItem("username")) {
+                setToken(localStorage.getItem("token") as string);
+                setId(parseInt(localStorage.getItem("id") as string));
+                setUsername(localStorage.getItem("username") as string);
+                setLoggedIn(true);
+            } else
+                navigate("/login");
         } else {
             document.title = "Chat";
             loadConversation();

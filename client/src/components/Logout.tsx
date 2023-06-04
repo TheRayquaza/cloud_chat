@@ -18,6 +18,9 @@ const Logout = (props: LogoutProps) => {
     const handleYes = () => {
         setOpen(false);
         setLoggedIn(false);
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        localStorage.removeItem("id");
         navigate("/login");
 
         send_ws({}, "logout", "default", { username : username, id : id as number})
