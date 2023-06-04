@@ -1,9 +1,5 @@
-echo "PORT=8081
-HOST="localhost"
-CERT=./cert.pem
-KEY=./privkey.pem
-
-LOG="false"
-" > .env
+#!/bin/bash
+cp default.env .env
+sudo cp /etc/letsencrypt/live/loqui-chat.xyz/cert.pem .
+sudo cp /etc/letsencrypt/live/loqui-chat.xyz/privkey.pem key.pem
 npm i
-
