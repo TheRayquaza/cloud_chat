@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws_1 = __importDefault(require("ws"));
+const fs_1 = __importDefault(require("fs"));
+const https_1 = __importDefault(require("https"));
 const message_1 = require("./types/message");
 const conversation_1 = require("./types/conversation");
 const user_1 = require("./types/user");
@@ -11,8 +13,6 @@ const query_1 = require("./types/query");
 const dotenv_1 = __importDefault(require("dotenv"));
 const logger_1 = __importDefault(require("./logger"));
 dotenv_1.default.config();
-const fs_1 = __importDefault(require("fs"));
-const https_1 = __importDefault(require("https"));
 const certPath = process.env.CERT;
 const keyPath = process.env.KEY;
 // Check if the required environment variables are defined
@@ -183,9 +183,8 @@ wss.on('connection', (ws) => {
 });
 // Specify the port and host to listen on
 const port = process.env.PORT || 8080;
-const host = process.env.HOST || 'localhost';
 // Start the server listening for incoming connections
-server.listen(port, host, () => {
-    console.log(`WebSocket server is running on ${host}:${port}`);
+server.listen(port, () => {
+    console.log(`WebSocket server is running on localhost:${port}`);
 });
 //# sourceMappingURL=ws.js.map
