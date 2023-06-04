@@ -37,7 +37,7 @@ const Home = () => {
                 </GridItem>
                 <GridItem>
                     <Button
-                        onClick={() => navigate('/doc')}
+                        onClick={() => window.location.assign('https://doc.loqui-chat.xyz')}
                         variant="outline"
                         size="lg"
                         width="full"

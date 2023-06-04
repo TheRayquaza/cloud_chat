@@ -13,8 +13,10 @@ import Logout from './components/Logout';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Default from './components/Default';
+import Db from "./components/Db.tsx";
 
 import GlobalProvider from './contexts/GlobalContext';
+
 
 const App = () => {
     const [logoutOpen, setLogoutOpen] = useState(false);
@@ -26,6 +28,7 @@ const App = () => {
                 <ToastContainer limit={5} pauseOnHover={false} autoClose={1500}/>
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/db" element={<Db/>} />
                     <Route path="/about" element={<About />} />
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/login" element={<Login />} />
