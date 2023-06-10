@@ -36,7 +36,9 @@ cd ../ws
 chmod +x install.sh
 ./install.sh
 
+echo "-------------------------"
 echo "7. Setting up API server"
+echo "-------------------------"
 cd ../server
 chmod +x install.sh
 ./install.sh
