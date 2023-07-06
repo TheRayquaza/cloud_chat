@@ -14,7 +14,10 @@ This is a simple web application that allows users to chat with each other in re
 
 ## Installation
 
-Clone the repository: git clone https://github.com/TheRayquaza/loqui_chat.git
+Clone the repository: 
+```sh
+git clone https://github.com/TheRayquaza/loqui_chat.git
+```
 
 Navigate to the project directory: 
 ```sh
@@ -23,7 +26,7 @@ cd loqui_chat
 
 Build the project: 
 ```sh
-./build.sh
+./install.sh
 ```
 
 Start the server: 
