@@ -1,0 +1,16 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "mariadb": "^3.1.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/sequelize": "^4.28.15",
+    "sequelize": "^6.33.0"
+  }
+}
