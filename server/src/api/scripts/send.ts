@@ -1,4 +1,4 @@
-import {response, Response} from "express";
+import {Response} from "express";
 import {script_logger} from "../logger";
 
 

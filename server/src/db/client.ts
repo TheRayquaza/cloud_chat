@@ -1,4 +1,4 @@
-import { Sequelize, Dialect } from 'sequelize';
+import { Sequelize } from 'sequelize';
 
 // Define a sequelize instance
 const sequelize : Sequelize = new Sequelize(

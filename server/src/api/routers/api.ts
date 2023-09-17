@@ -1,4 +1,4 @@
-import express, {NextFunction} from "express";
+import express from "express";
 import login_route from "./login";
 import register_route from "./register";
 import user_route from "./user";
