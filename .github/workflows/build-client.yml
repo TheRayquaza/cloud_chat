@@ -1,0 +1,26 @@
+name: build-client
+
+on:
+  push:
+      tags:
+          - v*
+
+jobs:
+    build-job:
+        runs-on: node:20.12-alpine3.19
+
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: Installing & building
+            run: |
+              cd client
+              npm install
+              npm run build --if-present
+
+          - name: Archive production (client) artifacts
+            uses: actions/upload-artifact@v4
+            with:
+              name: client
+              path: dist

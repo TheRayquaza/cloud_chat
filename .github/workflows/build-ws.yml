@@ -1,0 +1,26 @@
+name: build-ws
+
+on:
+  push:
+      tags:
+          - v*
+
+jobs:
+    build-job:
+        runs-on: node:20.12-alpine3.19
+
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: npm install, build, and test
+            run: |
+              npm install
+              npm run build --if-present
+              npm test
+
+          - name: Archive production (ws) artifacts
+            uses: actions/upload-artifact@v4
+            with:
+              name: dist_ws
+              path: dist
