@@ -7,7 +7,7 @@ on:
 
 jobs:
     build-job:
-        runs-on: node:20.12-alpine3.19
+        runs-on: node
 
         steps:
           - name: Checkout repository
