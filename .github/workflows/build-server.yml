@@ -16,7 +16,7 @@ jobs:
           - name: Installing & building
             run: |
               cd server
-              npm install --omit=dev
+              npm install
               npm run build --if-present
               cd build
               npm install --omit=dev
