@@ -18,9 +18,10 @@ jobs:
               cd server
               npm install
               npm run build --if-present
+              cp -r node_modules build
 
           - name: Archive production (server) artifacts
             uses: actions/upload-artifact@v4
             with:
-              name: dist_server
-              path: ./server/dist
+              name: server
+              path: ./server/build

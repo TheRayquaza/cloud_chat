@@ -18,9 +18,10 @@ jobs:
               cd ws
               npm install
               npm run build --if-present
+              cp -r node_modules build
 
           - name: Archive production (ws) artifacts
             uses: actions/upload-artifact@v4
             with:
-              name: dist_ws
-              path: ./ws/dist
+              name: ws
+              path: ./ws/build
