@@ -16,9 +16,10 @@ jobs:
           - name: npm install, build, and test
             run: |
               cd ws
-              npm install
+              npm install --omit=dev
               npm run build --if-present
-              cp -r node_modules build
+              cd build
+              npm install --omit=dev
 
           - name: Archive production (ws) artifacts
             uses: actions/upload-artifact@v4
