@@ -86,19 +86,46 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+      - name: Download backend build
+        uses: actions/download-artifact@v4
+        with:
+          path: ./backend
+          name: backend-build-${{ github.ref_name }}
+      - name: Unzip backend build
+        run: unzip backend-build-${{ github.ref_name }}
       - name: Build and push backend
         uses: docker/build-push-action@v6
         with:
+          context: ./backend
           push: true
           tags: therayquaza/loqui_chat:backend-${{ github.ref_name }}
+
+      - name: Download client build
+        uses: actions/download-artifact@v4
+        with:
+          path: ./client
+          name: client-build-${{ github.ref_name }}
+      - name: Unzip client build
+        run: unzip client-build-${{ github.ref_name }}
       - name: Build and push client
         uses: docker/build-push-action@v6
         with:
+          context: ./client
           push: true
           tags: therayquaza/loqui_chat:client-${{ github.ref_name }}
+      
+      - name: Download ws build
+        uses: actions/download-artifact@v4
+        with:
+          path: ./ws
+          name: ws-build-${{ github.ref_name }}
+      - name: Unzip ws build
+        run: unzip ws-build-${{ github.ref_name }}
       - name: Build and push ws
         uses: docker/build-push-action@v6
         with:
+          context: ./ws
           push: true
           tags: therayquaza/loqui_chat:ws-${{ github.ref_name }}
     needs: [build-ws, build-backend, build-client]
