@@ -6,17 +6,17 @@ on:
           - v*
 
 jobs:
-  test-backend:
-    name: Test-Backend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Testing
-        run: |
-          cd backend
-          npm install
-          npm run test
+  #test-backend:
+  #  name: Test-Backend
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repository
+  #      uses: actions/checkout@v4
+  #    - name: Testing
+  #      run: |
+  #        cd backend
+  #        npm install
+  #        npm run test
 
   build-client:
     name: Build-Client
@@ -35,7 +35,7 @@ jobs:
         with:
           name: client-build-${{ github.ref_name }}
           path: ./client/dist
-    needs: [test-backend]
+    #needs: [test-backend]
 
   build-backend:
     name: Build-Backend

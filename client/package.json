@@ -1,5 +1,5 @@
 {
-  "name": "loqui_chat",
+  "name": "loqui_chat_client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
