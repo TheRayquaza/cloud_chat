@@ -77,6 +77,9 @@ jobs:
     name: Docker-Build-Push
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -90,7 +93,7 @@ jobs:
       - name: Download backend build
         uses: actions/download-artifact@v4
         with:
-          path: ./backend
+          path: ./backend/dist
           name: backend-build-${{ github.ref_name }}
       - name: Build and push backend
         uses: docker/build-push-action@v6
@@ -102,7 +105,7 @@ jobs:
       - name: Download client build
         uses: actions/download-artifact@v4
         with:
-          path: ./client
+          path: ./client/dist
           name: client-build-${{ github.ref_name }}
       - name: Build and push client
         uses: docker/build-push-action@v6

@@ -1,3 +1,3 @@
 FROM nginx:stable-alpine
-COPY . .
+COPY dist .
 CMD ["nginx", "-g", "daemon off;"]
