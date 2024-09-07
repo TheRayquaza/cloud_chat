@@ -93,7 +93,7 @@ jobs:
           path: ./backend
           name: backend-build-${{ github.ref_name }}
       - name: Unzip backend build
-        run: unzip backend-build-${{ github.ref_name }}.zip
+        run: ls && unzip backend-build-${{ github.ref_name }}.zip
         working-directory: ./backend
       - name: Build and push backend
         uses: docker/build-push-action@v6
