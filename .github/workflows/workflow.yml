@@ -92,9 +92,6 @@ jobs:
         with:
           path: ./backend
           name: backend-build-${{ github.ref_name }}
-      - name: Unzip backend build
-        run: ls && unzip backend-build-${{ github.ref_name }}.zip
-        working-directory: ./backend
       - name: Build and push backend
         uses: docker/build-push-action@v6
         with:
@@ -107,9 +104,6 @@ jobs:
         with:
           path: ./client
           name: client-build-${{ github.ref_name }}
-      - name: Unzip client build
-        run: unzip client-build-${{ github.ref_name }}.zip
-        working-directory: ./client
       - name: Build and push client
         uses: docker/build-push-action@v6
         with:
@@ -122,9 +116,6 @@ jobs:
         with:
           path: ./ws/dist
           name: ws-build-${{ github.ref_name }}
-      - name: Unzip ws build
-        run: unzip ws-build-${{ github.ref_name }}.zip
-        working-directory: ./ws
       - name: Build and push ws
         uses: docker/build-push-action@v6
         with:
