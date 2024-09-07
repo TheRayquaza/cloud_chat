@@ -1,7 +1,7 @@
 {
-  "name": "loqui_chat",
+  "name": "loqui_chat_backend",
   "version": "1.0.0",
-  "description": "Cloud chat based on a cloud AWS instance",
+  "description": "REST Api static backend for web chat",
   "main": "src/app.ts",
   "scripts": {
     "test": "jest --detectOpenHandles",
